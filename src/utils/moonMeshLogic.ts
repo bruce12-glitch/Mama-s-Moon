@@ -223,3 +223,56 @@ export function computeGroundedCharacterY(
   const upwardWave = (1 + Math.sin(elapsedSeconds * frequency)) * 0.5 * safeAmp;
   return baseY + upwardWave + safeHop;
 }
+
+/**
+ * Filters sticker collection items by category ('all' | 'die-cut' | 'sheet' | 'bundle').
+ */
+export function filterStickerProducts<T extends { category: string }>(
+  products: T[],
+  category: 'all' | string
+): T[] {
+  if (!category || category === 'all') {
+    return products;
+  }
+  return products.filter((item) => item.category === category);
+}
+
+export interface StudioBagSummary {
+  totalItems: number;
+  subtotal: number;
+  qualifiesForFreeShipping: boolean;
+  amountToFreeShipping: number;
+}
+
+/**
+ * Calculates total item count, subtotal, and free sticker-shipping threshold progress
+ * from a bag quantity map and product price lookup.
+ */
+export function calculateStudioBagSummary(
+  quantities: Record<string, number>,
+  priceById: Record<string, number>,
+  freeShippingThreshold = 25
+): StudioBagSummary {
+  let totalItems = 0;
+  let subtotal = 0;
+
+  for (const [productId, rawQty] of Object.entries(quantities)) {
+    const qty = Math.max(0, Math.floor(rawQty || 0));
+    const unitPrice = priceById[productId];
+    if (qty > 0 && typeof unitPrice === 'number' && unitPrice >= 0) {
+      totalItems += qty;
+      subtotal += qty * unitPrice;
+    }
+  }
+
+  const roundedSubtotal = Math.round(subtotal * 100) / 100;
+  const remaining = Math.max(0, Math.round((freeShippingThreshold - roundedSubtotal) * 100) / 100);
+
+  return {
+    totalItems,
+    subtotal: roundedSubtotal,
+    qualifiesForFreeShipping: roundedSubtotal >= freeShippingThreshold,
+    amountToFreeShipping: remaining,
+  };
+}
+

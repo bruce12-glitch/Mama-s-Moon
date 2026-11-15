@@ -11,8 +11,15 @@ import {
   getForestAudioUiState,
   getDioramaLightMood,
   computeGroundedCharacterY,
+  filterStickerProducts,
+  calculateStudioBagSummary,
 } from './moonMeshLogic';
-import { HERO_SLIDES, BOOKS } from '../data/moonMeshData';
+import {
+  HERO_SLIDES,
+  BOOKS,
+  STICKER_COLLECTIONS,
+  DIGITAL_PDF_BOOKS,
+} from '../data/moonMeshData';
 
 test('getNextSlideIndex wraps around forward and backward', () => {
   assert.equal(getNextSlideIndex(0, 4, 1), 1);
@@ -141,7 +148,60 @@ test('computeGroundedCharacterY keeps Pip the Star and characters strictly at or
   for (let t = 0; t <= 10; t += 0.17) {
     const y = computeGroundedCharacterY(pipBaseY, t, 3.0, 0.11, 0);
     assert.ok(y >= pipBaseY - 1e-9, `Expected y (${y}) >= pipBaseY (${pipBaseY}) at t=${t}`);
-    // Lowest local point of Pip is -0.58, so world bottom is y - 0.58 >= floorY + 0.02
     assert.ok(y - 0.58 >= floorY, `Expected Pip bottom (${y - 0.58}) >= floorY (${floorY})`);
   }
 });
+
+test('filterStickerProducts filters STICKER_COLLECTIONS by category accurately', () => {
+  assert.equal(filterStickerProducts(STICKER_COLLECTIONS, 'all').length, 4);
+  const dieCut = filterStickerProducts(STICKER_COLLECTIONS, 'die-cut');
+  assert.equal(dieCut.length, 2);
+  assert.ok(dieCut.every((s) => s.category === 'die-cut'));
+
+  const sheets = filterStickerProducts(STICKER_COLLECTIONS, 'sheet');
+  assert.equal(sheets.length, 1);
+  assert.equal(sheets[0].id, 'sticker-strawberry-beret-sheet');
+
+  const bundles = filterStickerProducts(STICKER_COLLECTIONS, 'bundle');
+  assert.equal(bundles.length, 1);
+  assert.equal(bundles[0].id, 'sticker-complete-collector-bundle');
+});
+
+test('calculateStudioBagSummary computes item count, subtotal, and free shipping threshold', () => {
+  const priceMap: Record<string, number> = {};
+  for (const s of STICKER_COLLECTIONS) priceMap[s.id] = s.price;
+  for (const d of DIGITAL_PDF_BOOKS) priceMap[d.id] = d.price;
+
+  const empty = calculateStudioBagSummary({}, priceMap, 25);
+  assert.equal(empty.totalItems, 0);
+  assert.equal(empty.subtotal, 0);
+  assert.equal(empty.qualifiesForFreeShipping, false);
+  assert.equal(empty.amountToFreeShipping, 25);
+
+  const partial = calculateStudioBagSummary(
+    {
+      'sticker-miso-crew-pack': 1, // 9.50
+      'pdf-little-moon-picnic': 1, // 6.50
+    },
+    priceMap,
+    25
+  );
+  assert.equal(partial.totalItems, 2);
+  assert.equal(partial.subtotal, 16);
+  assert.equal(partial.qualifiesForFreeShipping, false);
+  assert.equal(partial.amountToFreeShipping, 9);
+
+  const full = calculateStudioBagSummary(
+    {
+      'sticker-complete-collector-bundle': 1, // 22.00
+      'pdf-little-moon-picnic': 1, // 6.50
+    },
+    priceMap,
+    25
+  );
+  assert.equal(full.totalItems, 2);
+  assert.equal(full.subtotal, 28.5);
+  assert.equal(full.qualifiesForFreeShipping, true);
+  assert.equal(full.amountToFreeShipping, 0);
+});
+

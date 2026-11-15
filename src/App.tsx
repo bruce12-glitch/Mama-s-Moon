@@ -3,28 +3,47 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   BOOKS,
-  PEEK_PAGES,
   CREW_MEMBERS,
   FAQ_ITEMS,
+  STICKER_COLLECTIONS,
+  DIGITAL_PDF_BOOKS,
   BookItem,
-  PeekItem,
+  StickerProduct,
+  DigitalPdfProduct,
+  StickerCategory,
 } from './data/moonMeshData';
 import {
   validateMoonMailEmail,
   computeBookTiltAngles,
   getForestAudioUiState,
+  filterStickerProducts,
+  calculateStudioBagSummary,
 } from './utils/moonMeshLogic';
 import { forestAudio } from './utils/forestAudio';
 import { HeroCarousel } from './components/HeroCarousel';
 import { ThreeMoonScene } from './components/ThreeMoonScene';
 import { ColoringStudioModal } from './components/ColoringStudioModal';
-import { CatalogModal, BookPreviewModal, PeekPreviewModal } from './components/Modals';
+import {
+  CatalogModal,
+  BookPreviewModal,
+  StickerPreviewModal,
+  DigitalPdfPreviewModal,
+  StudioBagModal,
+} from './components/Modals';
 
 const GIFT_TAB_DISMISSED_KEY = 'moon-mesh-free-page-shortcut-dismissed';
+const STUDIO_BAG_STORAGE_KEY = 'moon-mesh-studio-bag-v1';
 const EMPTY_SAVED_IDS = new Set<string>();
+
+const STICKER_FILTER_TABS: { id: StickerCategory; label: string }[] = [
+  { id: 'all', label: 'All Stickers (4)' },
+  { id: 'die-cut', label: 'Die-Cut Vinyl Packs' },
+  { id: 'sheet', label: 'Kiss-Cut Sheets' },
+  { id: 'bundle', label: 'Collector Bundles' },
+];
 
 export default function App() {
   // Crew outline vs color state
@@ -41,7 +60,74 @@ export default function App() {
     mode: 'search' | 'saved';
   }>({ open: false, mode: 'search' });
   const [activeBookPreview, setActiveBookPreview] = useState<BookItem | null>(null);
-  const [activePeekPreview, setActivePeekPreview] = useState<PeekItem | null>(null);
+  const [activeStickerPreview, setActiveStickerPreview] = useState<StickerProduct | null>(null);
+  const [activePdfPreview, setActivePdfPreview] = useState<DigitalPdfProduct | null>(null);
+  const [isBagOpen, setIsBagOpen] = useState<boolean>(false);
+
+  // Sticker collection category filter & Studio Bag state
+  const [stickerCategory, setStickerCategory] = useState<StickerCategory>('all');
+  const [bagQuantities, setBagQuantities] = useState<Record<string, number>>(() => {
+    try {
+      const raw = localStorage.getItem(STUDIO_BAG_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STUDIO_BAG_STORAGE_KEY, JSON.stringify(bagQuantities));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [bagQuantities]);
+
+  const priceLookup = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const s of STICKER_COLLECTIONS) map[s.id] = s.price;
+    for (const d of DIGITAL_PDF_BOOKS) map[d.id] = d.price;
+    return map;
+  }, []);
+
+  const filteredStickers = useMemo(
+    () => filterStickerProducts(STICKER_COLLECTIONS, stickerCategory),
+    [stickerCategory]
+  );
+
+  const bagSummary = useMemo(
+    () => calculateStudioBagSummary(bagQuantities, priceLookup, 25),
+    [bagQuantities, priceLookup]
+  );
+
+  const handleAddToBag = (productId: string) => {
+    setBagQuantities((prev) => ({
+      ...prev,
+      [productId]: (prev[productId] || 0) + 1,
+    }));
+    setRecentlyAddedId(productId);
+    window.setTimeout(() => {
+      setRecentlyAddedId((current) => (current === productId ? null : current));
+    }, 1500);
+  };
+
+  const handleUpdateBagQty = (productId: string, delta: number) => {
+    setBagQuantities((prev) => {
+      const nextQty = Math.max(0, (prev[productId] || 0) + delta);
+      const next = { ...prev };
+      if (nextQty === 0) {
+        delete next[productId];
+      } else {
+        next[productId] = nextQty;
+      }
+      return next;
+    });
+  };
+
+  const handleClearBag = () => {
+    setBagQuantities({});
+  };
 
   // Global Ambient Forest Sound state (synchronized with 3D Moon Picnic scene)
   const [isForestSoundOn, setIsForestSoundOn] = useState<boolean>(() =>
@@ -383,12 +469,25 @@ export default function App() {
               <span className="header-audio-label">{forestAudioUi.buttonLabel}</span>
               <span className="header-audio-badge">{forestAudioUi.statusBadge}</span>
             </button>
+
+            <button
+              id="header-studio-bag-button"
+              type="button"
+              className="studio-bag-trigger whitespace-nowrap shrink-0"
+              aria-label={`Open Studio Bag, ${bagSummary.totalItems} items`}
+              aria-haspopup="dialog"
+              onClick={() => setIsBagOpen(true)}
+            >
+              <span className="studio-bag-label">Studio Bag</span>
+              <span className="studio-bag-count tabular-nums">{bagSummary.totalItems}</span>
+            </button>
           </div>
         </div>
 
         <nav id="main-nav" className="main-nav shell" aria-label="Main">
           <a href="#books">Our book</a>
-          <a href="#peek">Peek inside</a>
+          <a href="#collections">Stickers</a>
+          <a href="#digital-books">Digital PDFs</a>
           <a href="#story">Our little world</a>
           <button
             type="button"
@@ -660,75 +759,276 @@ export default function App() {
           </div>
         </section>
 
-        {/* Peek Inside Section */}
-        <section className="peek" id="peek" aria-labelledby="peek-title">
+        {/* Sticker Collections Storefront Section */}
+        <section
+          className="sticker-collections"
+          id="collections"
+          aria-labelledby="collections-title"
+        >
           <div className="shell">
-            <div className="peek-heading">
+            <div className="store-section-header">
               <div>
                 <p className="eyebrow">
                   <svg className="icon" aria-hidden="true">
                     <use href="#spark" />
                   </svg>{' '}
-                  A look inside
+                  Moon Mesh Sticker Shop
                 </p>
-                <h2 id="peek-title">A peek between the pages.</h2>
+                <h2 id="collections-title">Sticker collections for cozy desks.</h2>
+                <p className="store-section-lead">
+                  Thick die-cut vinyl packs and kiss-cut journal sheets featuring Miso, Pip, Plum,
+                  and Sprout. Weatherproof matte vinyl that peels cleanly and brightens sketchbooks,
+                  laptops, and lunchboxes.
+                </p>
               </div>
+
+              <div className="store-filter-bar" role="tablist" aria-label="Filter sticker collections">
+                {STICKER_FILTER_TABS.map((tab) => {
+                  const isActive = stickerCategory === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`store-filter-btn whitespace-nowrap shrink-0 ${
+                        isActive ? 'is-active' : ''
+                      }`}
+                      onClick={() => setStickerCategory(tab.id)}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="sticker-grid">
+              {filteredStickers.map((sticker) => {
+                const isAdded = recentlyAddedId === sticker.id;
+                const inBagCount = bagQuantities[sticker.id] || 0;
+                return (
+                  <article key={sticker.id} className="sticker-card" id={sticker.id}>
+                    <div
+                      className="sticker-card-stage"
+                      style={{ background: sticker.bgTint }}
+                      onClick={() => setActiveStickerPreview(sticker)}
+                    >
+                      {sticker.badge && (
+                        <span className="store-corner-tag">{sticker.badge}</span>
+                      )}
+                      <div className="sticker-diecut-sheet">
+                        <img
+                          src={sticker.primaryImage}
+                          width={700}
+                          height={440}
+                          alt={sticker.title}
+                          loading="lazy"
+                          className="sticker-diecut-img"
+                        />
+                      </div>
+                      <span className="sticker-character-seal" aria-hidden="true">
+                        <img src={sticker.accentImage} alt="" width={48} height={48} />
+                      </span>
+                    </div>
+
+                    <div className="sticker-card-body">
+                      <p className="store-meta-line">
+                        {sticker.categoryLabel} · {sticker.pieceCount} · {sticker.finishSpec}
+                      </p>
+                      <div className="store-title-price-row">
+                        <h3>
+                          <button
+                            type="button"
+                            className="store-card-title-btn"
+                            onClick={() => setActiveStickerPreview(sticker)}
+                          >
+                            {sticker.title}
+                          </button>
+                        </h3>
+                        <span className="store-price tabular-nums">
+                          ${sticker.price.toFixed(2)}
+                          {sticker.compareAtPrice && (
+                            <small className="store-compare-price">
+                              ${sticker.compareAtPrice.toFixed(2)}
+                            </small>
+                          )}
+                        </span>
+                      </div>
+                      <p className="store-card-desc">{sticker.subtitle}</p>
+                      <p className="store-spec-subline">
+                        {sticker.sizeSpec} · Featuring {sticker.characters.join(', ')}
+                      </p>
+
+                      <div className="store-card-actions">
+                        <button
+                          type="button"
+                          className={`button ${
+                            isAdded ? 'button-yellow' : 'button-ink'
+                          } whitespace-nowrap shrink-0`}
+                          onClick={() => handleAddToBag(sticker.id)}
+                        >
+                          {isAdded
+                            ? 'Added to Bag ✓'
+                            : inBagCount > 0
+                            ? `Add Another (${inBagCount} in bag)`
+                            : 'Add to Bag'}
+                        </button>
+                        <button
+                          type="button"
+                          className="button button-outline whitespace-nowrap shrink-0"
+                          onClick={() => setActiveStickerPreview(sticker)}
+                        >
+                          Inspect Pack
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="store-section-foot">
               <p>
-                A little look at Miso’s world. Simple shapes, familiar friends, and plenty of space
-                for your favorite colors.
+                Free studio sticker shipping on orders over <strong className="tabular-nums">$25.00</strong> ·
+                Every pack ships in a protective glassine envelope with a bonus mini bookmark.
               </p>
-            </div>
-
-            <div className="peek-grid">
-              {PEEK_PAGES.map((page) => (
-                <a
-                  key={page.id}
-                  className={`peek-card ${page.cardClass}`}
-                  href="#color"
-                  aria-haspopup="dialog"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActivePeekPreview(page);
-                  }}
-                >
-                  <span className="peek-paper">
-                    <span className="peek-drawing">
-                      <img
-                        src={page.outlineSvg}
-                        width={1254}
-                        height={1254}
-                        alt={page.alt}
-                        loading="lazy"
-                      />
-                      <img
-                        className="peek-colored"
-                        src={page.coloredSvg}
-                        width={1254}
-                        height={1254}
-                        alt=""
-                        aria-hidden="true"
-                        loading="lazy"
-                      />
-                    </span>
-                  </span>
-                  <span className="peek-label">
-                    <strong>{page.title}</strong>
-                    <span>
-                      See it in color <span aria-hidden="true">→</span>
-                    </span>
-                  </span>
-                </a>
-              ))}
-            </div>
-
-            <div className="peek-foot">
-              <p>Three of the pages waiting inside. The free page below is ready to color right now.</p>
-              <a className="button button-yellow" href="#color">
-                Try the free page{' '}
+              <button
+                type="button"
+                className="text-link whitespace-nowrap"
+                onClick={() => setIsBagOpen(true)}
+              >
+                View Studio Bag ({bagSummary.totalItems}){' '}
                 <svg className="icon" aria-hidden="true">
                   <use href="#arrow" />
                 </svg>
-              </a>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Digital PDF Coloring Books Storefront Section */}
+        <section
+          className="digital-books-section"
+          id="digital-books"
+          aria-labelledby="digital-books-title"
+        >
+          <div className="shell">
+            <div className="store-section-header">
+              <div>
+                <p className="eyebrow">
+                  <svg className="icon" aria-hidden="true">
+                    <use href="#download" />
+                  </svg>{' '}
+                  Instant Digital Downloads
+                </p>
+                <h2 id="digital-books-title">Digital PDF coloring books to print at home.</h2>
+                <p className="store-section-lead">
+                  Color your favorite pages as many times as you like. Every Moon Mesh digital
+                  coloring book comes as a high-resolution 300 DPI vector PDF with both US Letter
+                  and A4 files included for crisp, stress-free kitchen-table printing.
+                </p>
+              </div>
+              <div className="digital-perks-strip" aria-label="Digital PDF specifications">
+                <span>✦ 300 DPI Vector Line Art</span>
+                <span aria-hidden="true">·</span>
+                <span>✦ US Letter &amp; A4 Included</span>
+                <span aria-hidden="true">·</span>
+                <span>✦ Print Unlimited Family Copies</span>
+              </div>
+            </div>
+
+            <div className="digital-pdf-grid">
+              {DIGITAL_PDF_BOOKS.map((pdfBook) => {
+                const isAdded = recentlyAddedId === pdfBook.id;
+                const inBagCount = bagQuantities[pdfBook.id] || 0;
+                return (
+                  <article key={pdfBook.id} className="digital-pdf-card" id={pdfBook.id}>
+                    <div
+                      className="digital-pdf-stage"
+                      style={{ background: pdfBook.bgTint }}
+                      onClick={() => setActivePdfPreview(pdfBook)}
+                    >
+                      {pdfBook.badge && (
+                        <span className="store-corner-tag">{pdfBook.badge}</span>
+                      )}
+                      <div className="digital-pdf-folio">
+                        <div className="digital-pdf-cover-wrap">
+                          <img
+                            src={pdfBook.coverImage}
+                            width={460}
+                            height={460}
+                            alt={`${pdfBook.title} cover`}
+                            loading="lazy"
+                            className="digital-pdf-cover-img"
+                          />
+                        </div>
+                        <div className="digital-pdf-sample-peek" aria-hidden="true">
+                          <img
+                            src={pdfBook.samplePreviewSvg}
+                            width={260}
+                            height={260}
+                            alt=""
+                            loading="lazy"
+                          />
+                          <span>300 DPI PDF</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="digital-pdf-body">
+                      <p className="store-meta-line">
+                        {pdfBook.number} · {pdfBook.pageCount} pages · {pdfBook.formatSpec} ·{' '}
+                        {pdfBook.ageRange}
+                      </p>
+                      <div className="store-title-price-row">
+                        <h3>
+                          <button
+                            type="button"
+                            className="store-card-title-btn"
+                            onClick={() => setActivePdfPreview(pdfBook)}
+                          >
+                            {pdfBook.title}
+                          </button>
+                        </h3>
+                        <span className="store-price tabular-nums">
+                          ${pdfBook.price.toFixed(2)}
+                          {pdfBook.compareAtPrice && (
+                            <small className="store-compare-price">
+                              ${pdfBook.compareAtPrice.toFixed(2)}
+                            </small>
+                          )}
+                        </span>
+                      </div>
+                      <p className="store-card-desc">{pdfBook.subtitle}</p>
+                      <p className="store-spec-subline">{pdfBook.paperSpec} · Instant download</p>
+
+                      <div className="store-card-actions">
+                        <button
+                          type="button"
+                          className={`button ${
+                            isAdded ? 'button-yellow' : 'button-ink'
+                          } whitespace-nowrap shrink-0`}
+                          onClick={() => handleAddToBag(pdfBook.id)}
+                        >
+                          {isAdded
+                            ? 'Added PDF ✓'
+                            : inBagCount > 0
+                            ? `In Bag (${inBagCount}) · Add +1`
+                            : 'Add PDF to Bag'}
+                        </button>
+                        <button
+                          type="button"
+                          className="button button-outline whitespace-nowrap shrink-0"
+                          onClick={() => setActivePdfPreview(pdfBook)}
+                        >
+                          Sample Page &amp; Specs
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -1057,9 +1357,10 @@ export default function App() {
             </div>
             <nav className="footer-nav" aria-label="Explore Moon Mesh">
               <div>
-                <h2>Our Book</h2>
+                <h2>Studio Shop</h2>
                 <a href="#little-moon-picnic">The Little Moon Picnic</a>
-                <a href="#peek">Peek inside the pages</a>
+                <a href="#collections">Sticker Collections</a>
+                <a href="#digital-books">Digital PDF Coloring Books</a>
                 <a href="#three-studio">3D Moon Picnic Diorama</a>
               </div>
               <div>
@@ -1150,10 +1451,25 @@ export default function App() {
         onTryFreePage={() => setIsStudioOpen(true)}
       />
 
-      <PeekPreviewModal
-        peek={activePeekPreview}
-        onClose={() => setActivePeekPreview(null)}
-        onColorFreePage={() => setIsStudioOpen(true)}
+      <StickerPreviewModal
+        sticker={activeStickerPreview}
+        onClose={() => setActiveStickerPreview(null)}
+        onAddToBag={handleAddToBag}
+      />
+
+      <DigitalPdfPreviewModal
+        pdfBook={activePdfPreview}
+        onClose={() => setActivePdfPreview(null)}
+        onAddToBag={handleAddToBag}
+      />
+
+      <StudioBagModal
+        isOpen={isBagOpen}
+        quantities={bagQuantities}
+        summary={bagSummary}
+        onClose={() => setIsBagOpen(false)}
+        onUpdateQty={handleUpdateBagQty}
+        onClearBag={handleClearBag}
       />
 
       <ThreeMoonScene
