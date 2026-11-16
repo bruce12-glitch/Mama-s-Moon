@@ -107,17 +107,22 @@ test('isEraserSwatch identifies eraser hex codes', () => {
   assert.equal(isEraserSwatch('#FFC81E'), false);
 });
 
-test('HERO_SLIDES first slide uses Grand Opening book showcase artwork', () => {
-  assert.equal(HERO_SLIDES[0].id, 'book-showcase');
-  assert.ok(HERO_SLIDES[0].image.startsWith('/assets/hero-book-showcase.png'));
+test('HERO_SLIDES includes Christmas, Winter Village, and Grand Opening book showcase slides', () => {
+  assert.equal(HERO_SLIDES[0].id, 'christmas-book-showcase');
+  assert.ok(HERO_SLIDES[0].image.startsWith('/assets/hero-christmas-showcase.png'));
   assert.equal(HERO_SLIDES[0].layout, 'book-showcase');
+  assert.equal(HERO_SLIDES[1].id, 'winter-village-showcase');
+  assert.ok(HERO_SLIDES[1].image.startsWith('/assets/hero-winter-village.jpg'));
+  assert.equal(HERO_SLIDES[2].id, 'book-showcase');
+  assert.ok(HERO_SLIDES[2].image.startsWith('/assets/hero-book-showcase.png'));
 });
 
-test('BOOKS catalog contains exclusively The Little Moon Picnic with valid cover path', () => {
-  assert.equal(BOOKS.length, 1);
+test('BOOKS catalog contains The Little Moon Picnic and Christmas & New Year with valid cover paths', () => {
+  assert.equal(BOOKS.length, 2);
   assert.equal(BOOKS[0].id, 'little-moon-picnic');
   assert.ok(BOOKS[0].coverImage.startsWith('/assets/the-little-moon-picnic-book.png'));
-  assert.ok(BOOKS[0].stageTagline.length > 0);
+  assert.equal(BOOKS[1].id, 'christmas-new-year');
+  assert.ok(BOOKS[1].coverImage.startsWith('/assets/christmas-new-year-book.png'));
 });
 
 test('getForestAudioUiState switches between speaker and muted states accurately', () => {

@@ -244,7 +244,7 @@ export const BookPreviewModal: React.FC<BookPreviewModalProps> = ({
               />
               <span className="standing-3d-book-figure">
                 <img
-                  src="/assets/standing-3d-book.webp?v=mamas-moon-3"
+                  src={book.standingImage || '/assets/standing-3d-book.webp?v=mamas-moon-3'}
                   width={670}
                   height={745}
                   alt=""

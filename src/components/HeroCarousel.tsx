@@ -83,16 +83,25 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     setTouchStartX(null);
   };
 
+  const getSlideBook = (slide: HeroSlide): BookItem => {
+    if (slide.bookId) {
+      const match = BOOKS.find((b) => b.id === slide.bookId);
+      if (match) return match;
+    }
+    return activeShowcaseBook;
+  };
+
   const handleCtaClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    cta: HeroSlide['primaryCta']
+    cta: HeroSlide['primaryCta'],
+    slideBook: BookItem = activeShowcaseBook
   ) => {
     if (cta.action === 'open-studio') {
       e.preventDefault();
       onOpenStudio();
     } else if (cta.action === 'preview-book') {
       e.preventDefault();
-      onPreviewBook(activeShowcaseBook);
+      onPreviewBook(slideBook);
     }
   };
 
@@ -100,6 +109,9 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     if (imageErrors[slide.id]) {
       if (slide.id === 'coloring-treat') return '/assets/hero-coloring-treat.jpg';
       if (slide.id === 'come-join-us') return '/assets/hero-come-join-us.jpg';
+      if (slide.id === 'christmas-book-showcase' || slide.id === 'winter-village-showcase') {
+        return '/assets/christmas-new-year-book.png?v=mamas-moon-3';
+      }
       if (slide.id === 'book-showcase') return '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3';
       return '/assets/color-together.webp';
     }
@@ -201,6 +213,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         {HERO_SLIDES.map((slide, index) => {
           const isCurrent = index === activeIndex;
           const imgSrc = getFallbackImage(slide);
+          const slideBook = getSlideBook(slide);
 
           return (
             <div
@@ -218,30 +231,28 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
               }`}
             >
               {slide.layout === 'book-showcase' ? (
-                /* Provided Coco Wyo-Style Full-Bleed Book Showcase Stage for The Little Moon Picnic */
+                /* Full-Bleed Book Showcase Stage */
                 <div className="cocowyo-showcase-banner-wrap">
                   <h1 id={isCurrent ? 'hero-title' : undefined} className="sr-only">
-                    Mama&apos;s Moon — {activeShowcaseBook.stageTagline} {activeShowcaseBook.title}
+                    Mama&apos;s Moon — {slideBook.stageTagline} {slideBook.title}
                   </h1>
 
-                  {/* Main Full-Bleed Stage Artwork (The Little Moon Picnic Showcase Image) */}
                   <div className="cocowyo-banner-figure">
                     <img
                       src={imgSrc}
                       width={2000}
                       height={756}
                       fetchPriority={index === 0 ? 'high' : 'auto'}
-                      alt={`${activeShowcaseBook.title} — Mama's Moon Grand Opening Book Showcase`}
+                      alt={slide.imageAlt || `${slideBook.title} — Mama's Moon Book Showcase`}
                       className="cocowyo-banner-img"
-                      onClick={() => onPreviewBook(activeShowcaseBook)}
+                      onClick={() => onPreviewBook(slideBook)}
                     />
 
-                    {/* Clickable hotspot over the standing 3D book on the wooden tabletop */}
                     <button
                       type="button"
                       className="cocowyo-banner-book-hotspot"
-                      aria-label={`Peek inside ${activeShowcaseBook.title}`}
-                      onClick={() => onPreviewBook(activeShowcaseBook)}
+                      aria-label={`Peek inside ${slideBook.title}`}
+                      onClick={() => onPreviewBook(slideBook)}
                     />
                   </div>
                 </div>

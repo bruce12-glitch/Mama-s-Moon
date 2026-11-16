@@ -501,7 +501,7 @@ export default function App() {
         </div>
 
         <nav id="main-nav" className="main-nav shell" aria-label="Main">
-          <a href="#books">Our book</a>
+          <a href="#books">Our books</a>
           <a href="#collections">Stickers</a>
           <a href="#digital-books">Digital PDFs</a>
           <a href="#story">Our little world</a>
@@ -608,13 +608,13 @@ export default function App() {
                   <svg className="icon" aria-hidden="true">
                     <use href="#spark" />
                   </svg>{' '}
-                  Our featured storybook
+                  Our featured storybooks
                 </p>
-                <h2 id="books-title">The Little Moon Picnic.</h2>
+                <h2 id="books-title">Cozy storybooks to color.</h2>
               </div>
               <p className="section-aside">
-                Miso &amp; Friends · A Story Coloring Book for Kids Ages 6–9. Warm buns, fresh
-                berries, and paper moons beside the crescent window.
+                Miso &amp; Friends · Story Coloring Books for Kids Ages 6–9. From rainy-day moon
+                picnics to snowy winter village strolls on Cocoa Lane.
               </p>
             </div>
 
@@ -660,7 +660,7 @@ export default function App() {
                         />
                         <span className="standing-3d-book-figure">
                           <img
-                            src="/assets/standing-3d-book.webp?v=mamas-moon-3"
+                            src={book.standingImage || '/assets/standing-3d-book.webp?v=mamas-moon-3'}
                             width={670}
                             height={745}
                             alt={`${book.title} — 3D hardcover storybook edition`}
