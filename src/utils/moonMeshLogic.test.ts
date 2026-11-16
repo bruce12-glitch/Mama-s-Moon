@@ -109,7 +109,7 @@ test('isEraserSwatch identifies eraser hex codes', () => {
 
 test('HERO_SLIDES includes Christmas, Winter Village, and Grand Opening book showcase slides', () => {
   assert.equal(HERO_SLIDES[0].id, 'christmas-book-showcase');
-  assert.ok(HERO_SLIDES[0].image.startsWith('/assets/hero-christmas-showcase.png'));
+  assert.equal(HERO_SLIDES[0].image, '/assets/aistudio/image_ae411272.png');
   assert.equal(HERO_SLIDES[0].layout, 'book-showcase');
   assert.equal(HERO_SLIDES[1].id, 'winter-village-showcase');
   assert.ok(HERO_SLIDES[1].image.startsWith('/assets/hero-winter-village.jpg'));
