@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BOOKS, HERO_SLIDES, BookItem, HeroSlide } from '../data/moonMeshData';
 import { getNextSlideIndex } from '../utils/moonMeshLogic';
+import { BrandName } from './BrandName';
 
 interface HeroCarouselProps {
   onOpenStudio: () => void;
-  onOpen3DScene: () => void;
   onPreviewBook: (book: BookItem) => void;
 }
 
@@ -21,7 +21,6 @@ const CONFETTI_PIECES = [
 
 export const HeroCarousel: React.FC<HeroCarouselProps> = ({
   onOpenStudio,
-  onOpen3DScene,
   onPreviewBook,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -88,10 +87,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     e: React.MouseEvent<HTMLAnchorElement>,
     cta: HeroSlide['primaryCta']
   ) => {
-    if (cta.action === 'open-3d') {
-      e.preventDefault();
-      onOpen3DScene();
-    } else if (cta.action === 'open-studio') {
+    if (cta.action === 'open-studio') {
       e.preventDefault();
       onOpenStudio();
     } else if (cta.action === 'preview-book') {
@@ -104,7 +100,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     if (imageErrors[slide.id]) {
       if (slide.id === 'coloring-treat') return '/assets/hero-coloring-treat.jpg';
       if (slide.id === 'come-join-us') return '/assets/hero-come-join-us.jpg';
-      if (slide.id === 'book-showcase') return '/assets/the-little-moon-picnic-book.png';
+      if (slide.id === 'book-showcase') return '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3';
       return '/assets/color-together.webp';
     }
     return slide.image;
@@ -116,7 +112,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       className={`hero-carousel relative isolate w-full overflow-hidden transition-colors duration-700 ${activeSlide.themeClass}`}
       style={{ backgroundColor: activeSlide.bgColor }}
       aria-roledescription="carousel"
-      aria-label="Featured Moon Mesh books and stories"
+      aria-label="Featured Mama's Moon books and stories"
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -225,7 +221,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                 /* Provided Coco Wyo-Style Full-Bleed Book Showcase Stage for The Little Moon Picnic */
                 <div className="cocowyo-showcase-banner-wrap">
                   <h1 id={isCurrent ? 'hero-title' : undefined} className="sr-only">
-                    Moon Mesh — {activeShowcaseBook.stageTagline} {activeShowcaseBook.title}
+                    Mama&apos;s Moon — {activeShowcaseBook.stageTagline} {activeShowcaseBook.title}
                   </h1>
 
                   {/* Main Full-Bleed Stage Artwork (The Little Moon Picnic Showcase Image) */}
@@ -235,7 +231,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                       width={2000}
                       height={756}
                       fetchPriority={index === 0 ? 'high' : 'auto'}
-                      alt={`${activeShowcaseBook.title} — Moon Mesh Grand Opening Book Showcase`}
+                      alt={`${activeShowcaseBook.title} — Mama's Moon Grand Opening Book Showcase`}
                       className="cocowyo-banner-img"
                       onClick={() => onPreviewBook(activeShowcaseBook)}
                     />
@@ -326,7 +322,16 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                   </div>
                   <div className="hero-inner shell">
                     <div className="hero-copy">
-                      <p className="eyebrow">{slide.eyebrow}</p>
+                      <p className="eyebrow">
+                        {slide.eyebrow.includes("Mama's Moon") ? (
+                          <>
+                            <BrandName />
+                            {slide.eyebrow.replace("Mama's Moon", '')}
+                          </>
+                        ) : (
+                          slide.eyebrow
+                        )}
+                      </p>
 
                       {slide.id === 'coloring-treat' ? (
                         <h1 className="hero-treat-heading">
