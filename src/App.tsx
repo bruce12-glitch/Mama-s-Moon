@@ -24,7 +24,6 @@ import {
 } from './utils/moonMeshLogic';
 import { forestAudio } from './utils/forestAudio';
 import { HeroCarousel } from './components/HeroCarousel';
-import { ThreeMoonScene } from './components/ThreeMoonScene';
 import { ColoringStudioModal } from './components/ColoringStudioModal';
 import {
   CatalogModal,
@@ -33,9 +32,10 @@ import {
   DigitalPdfPreviewModal,
   StudioBagModal,
 } from './components/Modals';
+import { BrandName } from './components/BrandName';
 
-const GIFT_TAB_DISMISSED_KEY = 'moon-mesh-free-page-shortcut-dismissed';
-const STUDIO_BAG_STORAGE_KEY = 'moon-mesh-studio-bag-v1';
+const GIFT_TAB_DISMISSED_KEY = 'mamas-moon-free-page-shortcut-dismissed';
+const STUDIO_BAG_STORAGE_KEY = 'mamas-moon-studio-bag-v1';
 const EMPTY_SAVED_IDS = new Set<string>();
 
 const STICKER_FILTER_TABS: { id: StickerCategory; label: string }[] = [
@@ -45,16 +45,37 @@ const STICKER_FILTER_TABS: { id: StickerCategory; label: string }[] = [
   { id: 'bundle', label: 'Collector Bundles' },
 ];
 
+function BrandWordmark({ variant = 'header' }: { variant?: 'header' | 'footer' }) {
+  return (
+    <a
+      className={`wordmark wordmark-brand ${variant === 'footer' ? 'wordmark-footer' : ''}`}
+      href="#top"
+      aria-label="Mama's Moon home"
+    >
+      <span className="sr-only">Mama&apos;s Moon</span>
+      <span className="wordmark-letters" aria-hidden="true">
+        <span className="m-plum">M</span>
+        <span className="m-rose">a</span>
+        <span className="m-honey">m</span>
+        <span className="m-sage">a</span>
+        <span className="m-peach">&rsquo;</span>
+        <span className="m-plum">s</span>
+        <span className="wordmark-space">&nbsp;</span>
+        <span className="m-rose">M</span>
+        <span className="m-honey">o</span>
+        <span className="m-plum">o</span>
+        <span className="m-sage">n</span>
+      </span>
+    </a>
+  );
+}
+
 export default function App() {
   // Crew outline vs color state
   const [crewColored, setCrewColored] = useState<boolean>(true);
 
-  // Modals & 3D Studio state
+  // Modals state
   const [isStudioOpen, setIsStudioOpen] = useState<boolean>(false);
-  const [is3DOpen, setIs3DOpen] = useState<boolean>(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('view') === '3d' || params.get('autostart') === '3d';
-  });
   const [catalogState, setCatalogState] = useState<{
     open: boolean;
     mode: 'search' | 'saved';
@@ -381,25 +402,20 @@ export default function App() {
             <button
               className="search-trigger"
               type="button"
-              aria-label="Search Moon Mesh"
+              aria-label="Search Mama's Moon"
               aria-haspopup="dialog"
               onClick={() => setCatalogState({ open: true, mode: 'search' })}
             >
               <svg className="icon" aria-hidden="true">
                 <use href="#search" />
               </svg>
-              <span>Search Moon Mesh</span>
+              <span>
+                Search <BrandName />
+              </span>
             </button>
           </div>
 
-          <a className="wordmark" href="#top" aria-label="Moon Mesh home">
-            <img
-              src="/assets/moon-mesh-lockup.webp"
-              width={305}
-              height={71}
-              alt="Moon Mesh"
-            />
-          </a>
+          <BrandWordmark variant="header" />
 
           <div className="utility-right">
             <button
@@ -489,17 +505,10 @@ export default function App() {
           <a href="#collections">Stickers</a>
           <a href="#digital-books">Digital PDFs</a>
           <a href="#story">Our little world</a>
-          <button
-            type="button"
-            className="nav-3d-btn"
-            onClick={() => setIs3DOpen(true)}
-          >
-            3D Moon Picnic
-          </button>
           <a href="#color">Free page</a>
           <a href="#faq">FAQs</a>
           <a
-            href="https://www.amazon.com/s?k=Moon+Mesh+coloring+books"
+            href="https://www.amazon.com/s?k=Mamas+Moon+coloring+books"
             className="amazon-nav"
             target="_blank"
             rel="noopener noreferrer"
@@ -507,7 +516,7 @@ export default function App() {
             Shop on Amazon <span aria-hidden="true">↗</span>
           </a>
           <a
-            href="https://www.etsy.com/search?q=Moon+Mesh+coloring+books"
+            href="https://www.etsy.com/search?q=Mamas+Moon+coloring+books"
             className="etsy-nav"
             target="_blank"
             rel="noopener noreferrer"
@@ -521,7 +530,6 @@ export default function App() {
         {/* Coco Wyo-Inspired Animated Hero Carousel */}
         <HeroCarousel
           onOpenStudio={() => setIsStudioOpen(true)}
-          onOpen3DScene={() => setIs3DOpen(true)}
           onPreviewBook={(book) => setActiveBookPreview(book)}
         />
 
@@ -623,7 +631,7 @@ export default function App() {
                     <a
                       className="book-art"
                       href={`#${book.id}-details`}
-                      aria-label={`Preview ${book.title}, a Moon Mesh coloring book`}
+                      aria-label={`Preview ${book.title}, a Mama's Moon coloring book`}
                       onPointerMove={handleBookPointerMove}
                       onPointerLeave={handleBookPointerLeave}
                       onClick={(e) => {
@@ -652,7 +660,7 @@ export default function App() {
                         />
                         <span className="standing-3d-book-figure">
                           <img
-                            src="/assets/standing-3d-book.webp"
+                            src="/assets/standing-3d-book.webp?v=mamas-moon-3"
                             width={670}
                             height={745}
                             alt={`${book.title} — 3D hardcover storybook edition`}
@@ -688,9 +696,9 @@ export default function App() {
             </div>
 
             <p className="books-footnote">
-              Find Moon Mesh on Amazon &amp; Etsy.{' '}
+              Find <BrandName /> on Amazon &amp; Etsy.{' '}
               <a
-                href="https://www.amazon.com/s?k=Moon+Mesh+coloring+books"
+                href="https://www.amazon.com/s?k=Mamas+Moon+coloring+books"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -698,64 +706,13 @@ export default function App() {
               </a>{' '}
               ·{' '}
               <a
-                href="https://www.etsy.com/search?q=Moon+Mesh+coloring+books"
+                href="https://www.etsy.com/search?q=Mamas+Moon+coloring+books"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Find us on Etsy <span aria-hidden="true">↗</span>
               </a>
             </p>
-          </div>
-        </section>
-
-        {/* Interactive 3D Moon Picnic Diorama Showcase Card */}
-        <section className="three-callout" id="three-studio" aria-labelledby="three-callout-title">
-          <div className="shell">
-            <div className="three-callout-card">
-              <div>
-                <p className="eyebrow" style={{ color: '#B55770' }}>
-                  <svg className="icon" aria-hidden="true">
-                    <use href="#spark" />
-                  </svg>{' '}
-                  Interactive 3D Story World
-                </p>
-                <h2 id="three-callout-title" className="text-[#2C2028]">
-                  Step inside The Little Moon Picnic in 3D.
-                </h2>
-                <p className="mt-3 max-w-[48ch] text-base text-[#5A4C55]">
-                  Inspect Miso’s warm bun handoff, Plum’s cushion, Pip’s spotted berry bowl, and
-                  Sprout’s leaf tray from any camera angle under studio moonlight.
-                </p>
-                <div className="mt-6 flex flex-wrap items-center gap-3 max-[900px]:justify-center">
-                  <button
-                    type="button"
-                    className="button button-ink whitespace-nowrap shrink-0"
-                    onClick={() => setIs3DOpen(true)}
-                  >
-                    Launch 3D Moon Picnic{' '}
-                    <svg className="icon" aria-hidden="true">
-                      <use href="#arrow" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    className="button button-paper whitespace-nowrap shrink-0"
-                    onClick={() => setIsStudioOpen(true)}
-                  >
-                    Color Miso’s Page
-                  </button>
-                </div>
-              </div>
-              <div className="three-callout-preview">
-                <ThreeMoonScene
-                  isOpen={!is3DOpen}
-                  embedded={true}
-                  onClose={() => {}}
-                  isForestSoundOn={isForestSoundOn}
-                  onToggleForestSound={handleToggleForestSound}
-                />
-              </div>
-            </div>
           </div>
         </section>
 
@@ -772,7 +729,7 @@ export default function App() {
                   <svg className="icon" aria-hidden="true">
                     <use href="#spark" />
                   </svg>{' '}
-                  Moon Mesh Sticker Shop
+                  <BrandName /> Sticker Shop
                 </p>
                 <h2 id="collections-title">Sticker collections for cozy desks.</h2>
                 <p className="store-section-lead">
@@ -924,7 +881,7 @@ export default function App() {
                 </p>
                 <h2 id="digital-books-title">Digital PDF coloring books to print at home.</h2>
                 <p className="store-section-lead">
-                  Color your favorite pages as many times as you like. Every Moon Mesh digital
+                  Color your favorite pages as many times as you like. Every <BrandName /> digital
                   coloring book comes as a high-resolution 300 DPI vector PDF with both US Letter
                   and A4 files included for crisp, stress-free kitchen-table printing.
                 </p>
@@ -1119,7 +1076,9 @@ export default function App() {
             </div>
             <figure className="free-visual">
               <div className="paper-card">
-                <span className="paper-kicker">Moon Mesh Coloring Club</span>
+                <span className="paper-kicker">
+                  <BrandName /> Coloring Club
+                </span>
                 <img
                   src="/assets/miso-moon-coloring.svg"
                   width={1254}
@@ -1144,10 +1103,10 @@ export default function App() {
                 </div>
                 <a
                   className="amazon-tile group"
-                  href="https://www.amazon.com/s?k=Moon+Mesh+coloring+books"
+                  href="https://www.amazon.com/s?k=Mamas+Moon+coloring+books"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Find Moon Mesh coloring books on Amazon, opens in a new tab"
+                  aria-label="Find Mama's Moon coloring books on Amazon, opens in a new tab"
                 >
                   <span className="amazon-wordmark" aria-hidden="true">
                     amazon
@@ -1175,10 +1134,10 @@ export default function App() {
                 </div>
                 <a
                   className="amazon-tile etsy-tile group"
-                  href="https://www.etsy.com/search?q=Moon+Mesh+coloring+books"
+                  href="https://www.etsy.com/search?q=Mamas+Moon+coloring+books"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Find Moon Mesh coloring books on Etsy, opens in a new tab"
+                  aria-label="Find Mama's Moon coloring books on Etsy, opens in a new tab"
                 >
                   <span className="etsy-wordmark" aria-hidden="true">
                     Etsy
@@ -1340,28 +1299,19 @@ export default function App() {
         <div className="footer-main">
           <div className="shell footer-inner">
             <div className="footer-brand">
-              <a className="wordmark" href="#top" aria-label="Moon Mesh home">
-                <img
-                  src="/assets/moon-mesh-lockup-lilac.webp"
-                  width={672}
-                  height={227}
-                  alt="Moon Mesh"
-                  loading="lazy"
-                />
-              </a>
+              <BrandWordmark variant="footer" />
               <p className="footer-tagline">See you on the moon.</p>
               <p className="footer-blurb">
                 Coloring books for little dreamers and their grown-ups. A small, happy world, one
                 page at a time.
               </p>
             </div>
-            <nav className="footer-nav" aria-label="Explore Moon Mesh">
+            <nav className="footer-nav" aria-label="Explore Mama's Moon">
               <div>
                 <h2>Studio Shop</h2>
                 <a href="#little-moon-picnic">The Little Moon Picnic</a>
                 <a href="#collections">Sticker Collections</a>
                 <a href="#digital-books">Digital PDF Coloring Books</a>
-                <a href="#three-studio">3D Moon Picnic Diorama</a>
               </div>
               <div>
                 <h2>Coloring Club</h2>
@@ -1376,7 +1326,7 @@ export default function App() {
                 <a href="#faq">Frequently asked questions</a>
                 <a href="#moon-mail">Moon Mail</a>
                 <a
-                  href="https://www.etsy.com/search?q=Moon+Mesh+coloring+books"
+                  href="https://www.etsy.com/search?q=Mamas+Moon+coloring+books"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -1386,7 +1336,9 @@ export default function App() {
             </nav>
           </div>
           <div className="shell footer-bottom">
-            <p>© 2026 Moon Mesh. A little world of color.</p>
+            <p>
+              © 2026 <BrandName />. A little world of color.
+            </p>
             <p>For small hands and big imaginations.</p>
             <a href="#top">
               Back to top{' '}
@@ -1430,7 +1382,7 @@ export default function App() {
         </aside>
       )}
 
-      {/* Interactive Modals & Full-Screen Three.js 3D Studio */}
+      {/* Interactive Modals */}
       <ColoringStudioModal
         isOpen={isStudioOpen}
         onClose={() => setIsStudioOpen(false)}
@@ -1442,7 +1394,6 @@ export default function App() {
         savedIds={EMPTY_SAVED_IDS}
         onClose={() => setCatalogState((prev) => ({ ...prev, open: false }))}
         onSelectBook={(book) => setActiveBookPreview(book)}
-        onOpen3DScene={() => setIs3DOpen(true)}
       />
 
       <BookPreviewModal
@@ -1470,13 +1421,6 @@ export default function App() {
         onClose={() => setIsBagOpen(false)}
         onUpdateQty={handleUpdateBagQty}
         onClearBag={handleClearBag}
-      />
-
-      <ThreeMoonScene
-        isOpen={is3DOpen}
-        onClose={() => setIs3DOpen(false)}
-        isForestSoundOn={isForestSoundOn}
-        onToggleForestSound={handleToggleForestSound}
       />
     </>
   );
