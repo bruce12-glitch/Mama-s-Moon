@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { STUDIO_PALETTE, CrayonSwatch } from '../data/moonMeshData';
 import { isEraserSwatch } from '../utils/moonMeshLogic';
+import { BrandName } from './BrandName';
 
 interface ColoringStudioModalProps {
   isOpen: boolean;
@@ -192,10 +193,12 @@ export const ColoringStudioModal: React.FC<ColoringStudioModalProps> = ({ isOpen
           <svg className="icon" aria-hidden="true">
             <use href="#spark" />
           </svg>{' '}
-          Moon Mesh Coloring Club
+          <BrandName /> Coloring Club
         </p>
         <h2 id="studio-title">Miso &amp; the Moon</h2>
-        <p>Choose a crayon from our Moon Mesh palette, then tap a shape — or press Enter on it.</p>
+        <p>
+          Choose a crayon from our <BrandName /> palette, then tap a shape — or press Enter on it.
+        </p>
         <p id="studio-status" className="visually-hidden" role="status">
           {statusMessage}
         </p>
