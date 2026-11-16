@@ -9,6 +9,7 @@ import {
   DigitalPdfProduct,
 } from '../data/moonMeshData';
 import { filterCatalogItems, StudioBagSummary } from '../utils/moonMeshLogic';
+import { BrandName } from './BrandName';
 
 interface CatalogModalProps {
   isOpen: boolean;
@@ -16,7 +17,6 @@ interface CatalogModalProps {
   savedIds: Set<string>;
   onClose: () => void;
   onSelectBook: (book: BookItem) => void;
-  onOpen3DScene: () => void;
 }
 
 export const CatalogModal: React.FC<CatalogModalProps> = ({
@@ -25,7 +25,6 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
   savedIds,
   onClose,
   onSelectBook,
-  onOpen3DScene,
 }) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -94,7 +93,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
       : results.length
       ? query.trim()
         ? `${results.length} ${results.length === 1 ? 'match' : 'matches'}`
-        : 'Explore books, stickers, digital PDFs, 3D scenes, and more.'
+        : 'Explore books, stickers, digital PDFs, and more.'
       : 'No matches. Try a word like “sticker,” “PDF,” “moon,” or “printable.”';
 
   return (
@@ -116,7 +115,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
         <svg className="icon" aria-hidden="true">
           <use href="#spark" />
         </svg>{' '}
-        Moon Mesh
+        <BrandName />
       </p>
       <h2 id="catalog-title">{mode === 'saved' ? 'Saved books' : 'Find a book, sticker, or PDF'}</h2>
       {mode === 'search' && (
@@ -130,7 +129,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Try sticker, PDF, kitten, 3D, or printable…"
+            placeholder="Try sticker, PDF, kitten, picnic, or printable…"
             autoComplete="off"
           />
         </label>
@@ -163,12 +162,8 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
               <a
                 href={item.href}
                 className="catalog-result"
-                onClick={(e) => {
+                onClick={() => {
                   onClose();
-                  if (item.href === '#three-studio') {
-                    e.preventDefault();
-                    onOpen3DScene();
-                  }
                 }}
               >
                 <span className="result-art">
@@ -249,7 +244,7 @@ export const BookPreviewModal: React.FC<BookPreviewModalProps> = ({
               />
               <span className="standing-3d-book-figure">
                 <img
-                  src="/assets/standing-3d-book.webp"
+                  src="/assets/standing-3d-book.webp?v=mamas-moon-3"
                   width={670}
                   height={745}
                   alt=""
@@ -271,7 +266,7 @@ export const BookPreviewModal: React.FC<BookPreviewModalProps> = ({
             <div className="dialog-actions">
               <a
                 className="button button-ink preview-amazon whitespace-nowrap"
-                href="https://www.amazon.com/s?k=Moon+Mesh+coloring+books"
+                href="https://www.amazon.com/s?k=Mamas+Moon+coloring+books"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -579,7 +574,7 @@ export const StudioBagModal: React.FC<StudioBagModalProps> = ({
         <svg className="icon" aria-hidden="true">
           <use href="#spark" />
         </svg>{' '}
-        Moon Mesh Studio Shop
+        <BrandName /> Studio Shop
       </p>
       <h2 id="studio-bag-title">Your Studio Bag ({summary.totalItems})</h2>
 
@@ -668,7 +663,7 @@ export const StudioBagModal: React.FC<StudioBagModalProps> = ({
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
               <a
                 className="button button-ink flex-1 justify-center whitespace-nowrap"
-                href="https://www.etsy.com/search?q=Moon+Mesh+coloring+books+stickers"
+                href="https://www.etsy.com/search?q=Mamas+Moon+coloring+books+stickers"
                 target="_blank"
                 rel="noopener noreferrer"
               >
