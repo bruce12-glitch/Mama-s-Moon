@@ -319,9 +319,11 @@ img {
 }
 
 .wordmark {
-  display: inline-block;
-  width: 275px;
-  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  line-height: 1;
   transition: transform 0.25s var(--ease-smooth);
 }
 
@@ -329,9 +331,72 @@ img {
   transform: scale(1.02);
 }
 
-.wordmark img {
-  width: 100%;
-  height: auto;
+.wordmark-brand {
+  font-family: var(--bubble-display);
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  user-select: none;
+  padding: 4px 2px;
+  text-shadow: 0 2px 0 rgba(50, 47, 55, 0.08);
+}
+
+.wordmark-letters {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.wordmark-letters > span {
+  display: inline-block;
+  transition: transform 0.22s var(--ease-smooth), filter 0.22s var(--ease-smooth);
+}
+
+.wordmark-brand:hover .wordmark-letters > span:nth-child(odd) {
+  transform: translateY(-2px) rotate(-1.5deg);
+}
+
+.wordmark-brand:hover .wordmark-letters > span:nth-child(even) {
+  transform: translateY(1.5px) rotate(1.5deg);
+}
+
+.wordmark-space {
+  width: 0.26em;
+}
+
+.m-plum {
+  color: #8862b0;
+}
+
+.m-rose {
+  color: #c85a78;
+}
+
+.m-honey {
+  color: #e09b2d;
+}
+
+.m-sage {
+  color: #5f8764;
+}
+
+.m-peach {
+  color: #d97559;
+}
+
+.inline-brand-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--bubble-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+
+.wordmark-footer {
+  font-size: clamp(32px, 3.4vw, 42px);
 }
 
 .search-trigger, .saved-trigger {
@@ -2776,8 +2841,9 @@ img {
 }
 
 .footer-brand .wordmark {
-  width: 285px;
-  max-width: 100%;
+  display: inline-flex;
+  justify-content: flex-start;
+  margin-bottom: 4px;
 }
 
 .footer-tagline {
@@ -3296,7 +3362,7 @@ img {
   .ribbon a { font-size: 11px; }
   .ribbon-stars { display: none; }
   .utility { min-height: 74px; gap: 6px; }
-  .wordmark { width: 215px; }
+  .wordmark-brand { font-size: clamp(24px, 4.5vw, 31px); }
   .search-trigger { min-width: 44px; width: 44px; padding: 12px; background: transparent; }
   .search-trigger span { display: none; }
   .header-audio-toggle { padding: 7px 11px; font-size: 12px; }
@@ -3350,7 +3416,7 @@ img {
 
 @media (max-width: 540px) {
   .utility { grid-template-columns: 44px minmax(0, 1fr) auto; }
-  .wordmark { width: min(100%, 185px); justify-self: center; }
+  .wordmark-brand { font-size: clamp(21px, 5.4vw, 26px); justify-self: center; }
   .main-nav { gap: 4px 12px; }
   .main-nav a, .main-nav button.nav-3d-btn { font-size: 12px; }
   .book-grid, .sticker-grid, .digital-pdf-grid { grid-template-columns: 1fr; gap: 20px; }
