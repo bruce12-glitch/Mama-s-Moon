@@ -13,6 +13,7 @@ export interface HeroSlide {
   primaryCta: { label: string; href: string; action?: 'open-3d' | 'open-studio' | 'preview-book' };
   secondaryCta: { label: string; href: string; action?: 'open-3d' | 'open-studio' | 'preview-book' };
   badgeText?: string;
+  bookId?: string;
 }
 
 export interface BookItem {
@@ -25,6 +26,7 @@ export interface BookItem {
   description: string;
   previewDescription: string;
   coverImage: string;
+  standingImage?: string;
   themeClass: 'book-picnic' | 'book-night' | 'book-garden' | 'book-space';
   keywords: string;
   fullBleedCover?: boolean;
@@ -121,6 +123,7 @@ export const BOOKS: BookItem[] = [
     previewDescription:
       'A story coloring book for kids ages 6–9. When rain taps the porch, Miso and friends spread a checkered blanket indoors, hang paper moons, and share warm buns and berries.',
     coverImage: '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3',
+    standingImage: '/assets/standing-3d-book.webp?v=mamas-moon-3',
     themeClass: 'book-picnic',
     keywords:
       'book coloring colouring story preview amazon the little moon picnic miso plum pip sprout bun berries',
@@ -130,11 +133,72 @@ export const BOOKS: BookItem[] = [
     markerColor: '#E86A78',
     stageTagline: 'GRAND OPENING:',
   },
+  {
+    id: 'christmas-new-year',
+    number: 'No. 02',
+    title: 'Christmas & New Year',
+    titleTop: 'Christmas',
+    titleEm: '& New Year',
+    genre: 'Holiday story coloring book · Ages 6–9',
+    description:
+      'Follow Miso, Plum, Pip, and Sprout down Cocoa Lane for candy-cane hot chocolate, gingerbread stars, and sparkling winter village adventures.',
+    previewDescription:
+      'A festive story coloring book for kids ages 6–9. Bundle up in cozy scarves and red boots with Miso and friends as they stroll through the snowy town, share warm holiday treats, and light New Year sparklers.',
+    coverImage: '/assets/christmas-new-year-book.png?v=mamas-moon-3',
+    standingImage: '/assets/standing-3d-christmas-book.webp?v=mamas-moon-3',
+    themeClass: 'book-night',
+    keywords:
+      'book coloring colouring christmas new year holiday winter village snow santa miso plum pip sprout cocoa gift',
+    fullBleedCover: true,
+    spineColor: '#F2DCA0',
+    spineTextColor: '#4B2C20',
+    markerColor: '#CC4F73',
+    stageTagline: 'A COZY GIFT FOR CHRISTMAS:',
+  },
 ];
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
+    id: 'christmas-book-showcase',
+    bookId: 'christmas-new-year',
+    eyebrow: "Mama's Moon Holiday Collection",
+    titleLines: ['A Cozy Gift', 'for Christmas'],
+    accentLine: 'Cozy Gift',
+    subtitle:
+      'Make the countdown cozier with a moment to color. Peek inside our new Christmas & New Year story coloring book for kids ages 6–9.',
+    signoff: 'Warm cocoa & snowy wishes ♡',
+    bgColor: '#FCE7E9',
+    themeClass: 'slide-treat',
+    image: '/assets/hero-christmas-showcase.png?v=mamas-moon-3',
+    imageAlt:
+      "A Cozy Gift for Christmas — Mama's Moon Christmas & New Year story coloring book standing in a snowy pastel winter village surrounded by pine trees, cottages, mini coloring cards, and markers.",
+    layout: 'book-showcase',
+    primaryCta: { label: 'Peek inside Christmas & New Year', href: '#books', action: 'preview-book' },
+    secondaryCta: { label: 'Browse Digital PDFs', href: '#digital-books' },
+    badgeText: 'HOLIDAY EDITION',
+  },
+  {
+    id: 'winter-village-showcase',
+    bookId: 'christmas-new-year',
+    eyebrow: "Mama's Moon × Miso & Friends",
+    titleLines: ['Follow Miso & Friends', 'Around Winter Village'],
+    accentLine: 'Winter Village',
+    subtitle:
+      'Stroll past Cocoa Lane and the North Pole signpost with Miso, Plum, Pip, and Sprout in our newest holiday story coloring book.',
+    signoff: 'See you on Cocoa Lane ♡',
+    bgColor: '#EADBC8',
+    themeClass: 'slide-showcase',
+    image: '/assets/hero-winter-village.jpg?v=mamas-moon-3',
+    imageAlt:
+      "Follow Miso & Friends Around Winter Village — stack of Mama's Moon Christmas & New Year coloring books on a wooden tabletop with Winter Village signpost, character stickers, and alcohol markers.",
+    layout: 'book-showcase',
+    primaryCta: { label: 'Peek inside Christmas & New Year', href: '#books', action: 'preview-book' },
+    secondaryCta: { label: 'Shop Sticker Collections', href: '#collections' },
+    badgeText: 'WINTER VILLAGE',
+  },
+  {
     id: 'book-showcase',
+    bookId: 'little-moon-picnic',
     eyebrow: "Mama's Moon × Miso & Friends",
     titleLines: ['GRAND OPENING:', 'The Little Moon Picnic'],
     accentLine: 'The Little Moon Picnic',
@@ -305,8 +369,33 @@ export const DIGITAL_PDF_BOOKS: DigitalPdfProduct[] = [
     badge: 'MOST POPULAR PDF',
   },
   {
-    id: 'pdf-midnight-kittens',
+    id: 'pdf-christmas-new-year',
     number: 'No. 02 · Digital PDF',
+    title: 'Christmas & New Year — Printable Book',
+    subtitle: 'Festive 42-page winter village story coloring book for instant home printing.',
+    price: 6.5,
+    pageCount: 42,
+    formatSpec: '300 DPI Vector PDF',
+    paperSpec: 'A4 & US Letter files included',
+    ageRange: 'Ages 6–9',
+    description:
+      'Follow Miso, Plum, Pip, and Sprout through a snowy town of twinkling wreaths, candy-cane cocoa mugs, gingerbread stars, and New Year sparklers. Includes 42 print-ready holiday story pages.',
+    includedItems: [
+      '42 festive winter village & holiday story pages with bold outlines',
+      'Separate US Letter (8.5" × 11") & A4 print-ready 300 DPI PDF files',
+      'Bonus printable holiday gift tags & countdown coloring tracker',
+    ],
+    coverImage: '/assets/christmas-new-year-book.png?v=mamas-moon-3',
+    samplePreviewSvg: '/assets/rooftop-coloring.svg',
+    sampleColoredSvg: '/assets/rooftop-colored.svg',
+    samplePdfUrl: '/assets/miso-and-the-moon.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Christmas+New+Year+PDF',
+    bgTint: '#FCE7E9',
+    badge: 'NEW HOLIDAY PDF',
+  },
+  {
+    id: 'pdf-midnight-kittens',
+    number: 'No. 03 · Digital PDF',
     title: 'Midnight Kittens — Printable Book',
     subtitle: 'Paper lanterns, sleepy clouds, and moonlit rooftop adventures.',
     price: 6.0,
