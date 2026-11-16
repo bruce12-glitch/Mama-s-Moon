@@ -123,7 +123,7 @@ export function getForestAudioUiState(isPlaying: boolean): ForestAudioUiState {
     return {
       isPlaying: true,
       iconState: 'speaker',
-      ariaLabel: 'Mute ambient forest sound for the 3D Moon Picnic scene',
+      ariaLabel: "Mute ambient forest sound for Mama's Moon",
       buttonLabel: 'Forest Sound',
       statusBadge: 'On',
     };
@@ -131,7 +131,7 @@ export function getForestAudioUiState(isPlaying: boolean): ForestAudioUiState {
   return {
     isPlaying: false,
     iconState: 'muted',
-    ariaLabel: 'Play ambient forest sound for the 3D Moon Picnic scene',
+    ariaLabel: "Play ambient forest sound for Mama's Moon",
     buttonLabel: 'Forest Sound',
     statusBadge: 'Muted',
   };

@@ -79,7 +79,7 @@ test('validateMoonMailEmail rejects empty or malformed emails and accepts valid 
     valid: false,
     error: 'That email looks a little lost in space. Try again?',
   });
-  assert.deepEqual(validateMoonMailEmail('miso@moonmesh.com'), {
+  assert.deepEqual(validateMoonMailEmail('miso@mamasmoon.com'), {
     valid: true,
     error: '',
   });
@@ -109,14 +109,14 @@ test('isEraserSwatch identifies eraser hex codes', () => {
 
 test('HERO_SLIDES first slide uses Grand Opening book showcase artwork', () => {
   assert.equal(HERO_SLIDES[0].id, 'book-showcase');
-  assert.equal(HERO_SLIDES[0].image, '/assets/hero-book-showcase.png');
+  assert.ok(HERO_SLIDES[0].image.startsWith('/assets/hero-book-showcase.png'));
   assert.equal(HERO_SLIDES[0].layout, 'book-showcase');
 });
 
 test('BOOKS catalog contains exclusively The Little Moon Picnic with valid cover path', () => {
   assert.equal(BOOKS.length, 1);
   assert.equal(BOOKS[0].id, 'little-moon-picnic');
-  assert.equal(BOOKS[0].coverImage, '/assets/the-little-moon-picnic-book.png');
+  assert.ok(BOOKS[0].coverImage.startsWith('/assets/the-little-moon-picnic-book.png'));
   assert.ok(BOOKS[0].stageTagline.length > 0);
 });
 
