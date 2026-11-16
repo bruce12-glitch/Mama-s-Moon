@@ -120,7 +120,7 @@ export const BOOKS: BookItem[] = [
       'Join Miso, Plum, Pip, and Sprout for warm buns, fresh berries, and paper moons beside the crescent window.',
     previewDescription:
       'A story coloring book for kids ages 6–9. When rain taps the porch, Miso and friends spread a checkered blanket indoors, hang paper moons, and share warm buns and berries.',
-    coverImage: '/assets/the-little-moon-picnic-book.png',
+    coverImage: '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3',
     themeClass: 'book-picnic',
     keywords:
       'book coloring colouring story preview amazon the little moon picnic miso plum pip sprout bun berries',
@@ -135,7 +135,7 @@ export const BOOKS: BookItem[] = [
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'book-showcase',
-    eyebrow: 'Moon Mesh × Miso & Friends',
+    eyebrow: "Mama's Moon × Miso & Friends",
     titleLines: ['GRAND OPENING:', 'The Little Moon Picnic'],
     accentLine: 'The Little Moon Picnic',
     subtitle:
@@ -143,12 +143,12 @@ export const HERO_SLIDES: HeroSlide[] = [
     signoff: 'Now serving cozy moments ♡',
     bgColor: '#F6EFE6',
     themeClass: 'slide-showcase',
-    image: '/assets/hero-book-showcase.png',
+    image: '/assets/hero-book-showcase.png?v=mamas-moon-3',
     imageAlt:
-      'Moon Mesh Grand Opening showcase featuring The Little Moon Picnic story coloring book standing on a wooden tabletop alongside Miso, Pip, and Plum.',
+      "Mama's Moon Grand Opening showcase featuring The Little Moon Picnic story coloring book standing on a wooden tabletop alongside Miso, Pip, and Plum.",
     layout: 'book-showcase',
     primaryCta: { label: 'Peek inside this book', href: '#books', action: 'preview-book' },
-    secondaryCta: { label: 'Open 3D Picnic Diorama', href: '#three-studio', action: 'open-3d' },
+    secondaryCta: { label: 'Shop Sticker Collections', href: '#collections' },
     badgeText: 'NEW STORYBOOK',
   },
   {
@@ -165,7 +165,7 @@ export const HERO_SLIDES: HeroSlide[] = [
       'Miso the kitten and Plum the rabbit share a coloring book at a little table beneath a moonlit window. Pip and Sprout keep them company.',
     layout: 'split',
     primaryCta: { label: 'Explore our book', href: '#books' },
-    secondaryCta: { label: 'Explore 3D Moon Picnic', href: '#three-studio', action: 'open-3d' },
+    secondaryCta: { label: 'Browse Digital PDFs', href: '#digital-books' },
   },
   {
     id: 'coloring-treat',
@@ -185,7 +185,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
   {
     id: 'come-join-us',
-    eyebrow: 'Moon Mesh Coloring Club',
+    eyebrow: "Mama's Moon Coloring Club",
     titleLines: ['COME', 'JOIN', 'US'],
     subtitle:
       'Pull up a cushion with Miso, Pip, Plum, and Sprout! Try our free interactive coloring page, print a sheet for the kitchen table, or hop into Moon Mail.',
@@ -212,12 +212,12 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     finishSpec: 'Waterproof matte vinyl',
     sizeSpec: '2.4" – 3.2" contour cut',
     description:
-      'All four Moon Mesh friends in their signature poses: Miso with a warm cocoa mug, Pip holding a red crayon, Plum reading an open storybook, and Sprout beside blooming flowerpots. Printed on thick, weatherproof matte vinyl that peels cleanly.',
+      "All four Mama's Moon friends in their signature poses: Miso with a warm cocoa mug, Pip holding a red crayon, Plum reading an open storybook, and Sprout beside blooming flowerpots. Printed on thick, weatherproof matte vinyl that peels cleanly.",
     primaryImage: '/assets/our-little-crew.webp',
     accentImage: '/assets/crew-miso.svg',
     characters: ['Miso', 'Pip', 'Plum', 'Sprout'],
     bgTint: '#FFF6E6',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+Miso+Friends+sticker+pack',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Miso+Friends+sticker+pack',
     badge: 'STUDIO FAVORITE',
   },
   {
@@ -236,7 +236,7 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     accentImage: '/assets/crew-sprout.svg',
     characters: ['Miso', 'Sprout'],
     bgTint: '#FDF0F4',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+strawberry+beret+sticker+sheet',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+strawberry+beret+sticker+sheet',
   },
   {
     id: 'sticker-moon-picnic-pack',
@@ -254,11 +254,11 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     accentImage: '/assets/crew-pip.svg',
     characters: ['Miso', 'Plum', 'Pip'],
     bgTint: '#F4EEFC',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+picnic+vinyl+stickers',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+picnic+vinyl+stickers',
   },
   {
     id: 'sticker-complete-collector-bundle',
-    title: 'Complete Moon Mesh Sticker Trunk',
+    title: "Complete Mama's Moon Sticker Trunk",
     subtitle: 'Every die-cut vinyl pack and kiss-cut sheet tucked into a keepsake glassine envelope.',
     category: 'bundle',
     categoryLabel: 'Collector Bundle',
@@ -273,7 +273,7 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     accentImage: '/assets/crew-plum.svg',
     characters: ['Miso', 'Pip', 'Plum', 'Sprout'],
     bgTint: '#FFF8DF',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+sticker+bundle',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+sticker+bundle',
     badge: 'SAVE $5',
   },
 ];
@@ -296,11 +296,11 @@ export const DIGITAL_PDF_BOOKS: DigitalPdfProduct[] = [
       'Separate US Letter (8.5" × 11") & A4 print-ready PDF files',
       'Printable DIY bookmark & picnic place-card bonus sheet',
     ],
-    coverImage: '/assets/the-little-moon-picnic-book.png',
+    coverImage: '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3',
     samplePreviewSvg: '/assets/rooftop-coloring.svg',
     sampleColoredSvg: '/assets/rooftop-colored.svg',
     samplePdfUrl: '/assets/miso-moon-coloring.pdf',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+Little+Moon+Picnic+PDF',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Little+Moon+Picnic+PDF',
     bgTint: '#FFF7E5',
     badge: 'MOST POPULAR PDF',
   },
@@ -325,7 +325,7 @@ export const DIGITAL_PDF_BOOKS: DigitalPdfProduct[] = [
     samplePreviewSvg: '/assets/rooftop-coloring.svg',
     sampleColoredSvg: '/assets/rooftop-colored.svg',
     samplePdfUrl: '/assets/miso-and-the-moon.pdf',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+Midnight+Kittens+printable+PDF',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Midnight+Kittens+printable+PDF',
     bgTint: '#F3EEFC',
   },
   {
@@ -349,13 +349,13 @@ export const DIGITAL_PDF_BOOKS: DigitalPdfProduct[] = [
     samplePreviewSvg: '/assets/garden-coloring.svg',
     sampleColoredSvg: '/assets/garden-colored.svg',
     samplePdfUrl: '/assets/miso-moon-coloring.pdf',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+Starlight+Garden+printable+PDF',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Starlight+Garden+printable+PDF',
     bgTint: '#EEF8F2',
   },
   {
     id: 'pdf-complete-studio-bundle',
     number: 'No. 04 · 3-Book PDF Bundle',
-    title: 'Complete Moon Mesh Printable Library',
+    title: "Complete Mama's Moon Printable Library",
     subtitle: 'All three digital coloring books (112 printable pages) in one instant download.',
     price: 14.5,
     compareAtPrice: 18.5,
@@ -366,7 +366,7 @@ export const DIGITAL_PDF_BOOKS: DigitalPdfProduct[] = [
     description:
       'The complete digital shelf for rainy weekends, playdates, and quiet afternoons. Includes The Little Moon Picnic, Midnight Kittens, and Starlight Garden in high-resolution PDF format so you can print fresh copies whenever a new crayon box arrives.',
     includedItems: [
-      'All 112 coloring pages across 3 full-length Moon Mesh books',
+      "All 112 coloring pages across 3 full-length Mama's Moon books",
       'A4 & US Letter master PDFs + Procreate/tablet-friendly pages',
       'Bonus printable Crew Character Standees & Coloring Club certificate',
     ],
@@ -374,7 +374,7 @@ export const DIGITAL_PDF_BOOKS: DigitalPdfProduct[] = [
     samplePreviewSvg: '/assets/rocket-coloring.svg',
     sampleColoredSvg: '/assets/rocket-colored.svg',
     samplePdfUrl: '/assets/miso-and-the-moon.pdf',
-    etsyUrl: 'https://www.etsy.com/search?q=Moon+Mesh+printable+coloring+book+bundle+PDF',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+printable+coloring+book+bundle+PDF',
     bgTint: '#FDF0F4',
     badge: 'BEST VALUE · 3 PDFS',
   },
@@ -467,15 +467,8 @@ export const CATALOG_SECTIONS = [
     title: 'Digital PDF Coloring Books',
     theme: 'Instant-download printable 300 DPI PDF books',
     href: '#digital-books',
-    image: '/assets/the-little-moon-picnic-book.png',
+    image: '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3',
     keywords: 'digital pdf printable coloring book download instant a4 letter bundle',
-  },
-  {
-    title: 'Interactive 3D Moon Picnic Diorama',
-    theme: 'Explore Miso, Pip, Plum & Sprout in 3D',
-    href: '#three-studio',
-    image: '/assets/color-together.webp',
-    keywords: '3d studio diorama threejs moon picnic interactive camera lighting',
   },
   {
     title: 'From the coloring table',
@@ -529,9 +522,9 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     id: 'where-find',
-    question: 'Where can I find Moon Mesh books?',
+    question: "Where can I find Mama's Moon books?",
     answerHtml:
-      'You can find Moon Mesh on Amazon and Etsy. Browse Moon Mesh on Amazon or visit our Etsy shop for the current selection, printables, and delivery options.',
+      "You can find Mama's Moon on Amazon and Etsy. Browse Mama's Moon on Amazon or visit our Etsy shop for the current selection, printables, and delivery options.",
   },
   {
     id: 'studio-free',
@@ -541,9 +534,9 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     id: 'drawing-system',
-    question: 'What makes Moon Mesh drawings feel handmade and easy to color?',
+    question: "What makes Mama's Moon drawings feel handmade and easy to color?",
     answerHtml:
-      'Every illustration follows our Moon Mesh Drawing System: confident 1.2–1.5 mm rounded felt-tip contours, closed colorable regions with at least 70% open white space, purposeful poses where Miso, Pip, Plum, and Sprout interact naturally, and zero gray shading or visual clutter.',
+      "Every illustration follows our Mama's Moon Drawing System: confident 1.2–1.5 mm rounded felt-tip contours, closed colorable regions with at least 70% open white space, purposeful poses where Miso, Pip, Plum, and Sprout interact naturally, and zero gray shading or visual clutter.",
   },
   {
     id: 'moon-mail-faq',
