@@ -34,12 +34,14 @@ import {
   calculateStudioBagSummary,
   getVisibleDigitalCombos,
   toggleSavedBookId,
+  parseWishlistIds,
 } from './utils/moonMeshLogic';
 import { forestAudio } from './utils/forestAudio';
 import { HeroCarousel } from './components/HeroCarousel';
 import { DigitalSection } from './components/DigitalSection';
 import { LaptopStickersSection } from './components/LaptopStickersSection';
 import { KidsBeddingSection } from './components/KidsBeddingSection';
+import { WishlistHeartButton } from './components/WishlistHeartButton';
 import { ColoringStudioModal } from './components/ColoringStudioModal';
 import {
   CatalogModal,
@@ -50,13 +52,22 @@ import {
   DigitalPdfPreviewModal,
   DigitalComboPreviewModal,
   StudioBagModal,
+  WishlistModal,
 } from './components/Modals';
 import { BrandName } from './components/BrandName';
 
 const GIFT_TAB_DISMISSED_KEY = 'mamas-moon-free-page-shortcut-dismissed';
 const STUDIO_BAG_STORAGE_KEY = 'mamas-moon-studio-bag-v1';
-const SAVED_DIGITAL_STORAGE_KEY = 'mamas-moon-saved-digital-v1';
-const VALID_DIGITAL_COMBO_IDS = new Set(DIGITAL_COMBO_PACKS.map((c) => c.id));
+const WISHLIST_STORAGE_KEY = 'wishlist';
+const LEGACY_SAVED_DIGITAL_KEY = 'mamas-moon-saved-digital-v1';
+const VALID_WISHLIST_IDS = new Set([
+  ...BOOKS.map((b) => b.id),
+  ...STICKER_COLLECTIONS.map((s) => s.id),
+  ...LAPTOP_STICKER_PACKS.map((l) => l.id),
+  ...KIDS_BEDDING_COLLECTION.map((k) => k.id),
+  ...DIGITAL_PDF_BOOKS.map((d) => d.id),
+  ...DIGITAL_COMBO_PACKS.map((c) => c.id),
+]);
 
 const STICKER_FILTER_TABS: { id: StickerCategory; label: string }[] = [
   { id: 'all', label: 'All Stickers (4)' },
@@ -109,17 +120,17 @@ export default function App() {
   const [activePdfPreview, setActivePdfPreview] = useState<DigitalPdfProduct | null>(null);
   const [activeComboPreview, setActiveComboPreview] = useState<DigitalComboProduct | null>(null);
   const [isBagOpen, setIsBagOpen] = useState<boolean>(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState<boolean>(false);
 
-  // Digital showcase expansion & saved hearts state
+  // Digital showcase expansion & unified Wishlist state persisted in localStorage 'wishlist'
   const [isDigitalExpanded, setIsDigitalExpanded] = useState<boolean>(false);
-  const [savedDigitalIds, setSavedDigitalIds] = useState<Set<string>>(() => {
+  const [wishlistIds, setWishlistIds] = useState<Set<string>>(() => {
     try {
-      const raw = localStorage.getItem(SAVED_DIGITAL_STORAGE_KEY);
-      if (!raw) return new Set<string>();
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed)
-        ? new Set(parsed.filter((id): id is string => typeof id === 'string' && VALID_DIGITAL_COMBO_IDS.has(id)))
-        : new Set<string>();
+      return parseWishlistIds(
+        localStorage.getItem(WISHLIST_STORAGE_KEY),
+        VALID_WISHLIST_IDS,
+        localStorage.getItem(LEGACY_SAVED_DIGITAL_KEY)
+      );
     } catch {
       return new Set<string>();
     }
@@ -127,14 +138,18 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(SAVED_DIGITAL_STORAGE_KEY, JSON.stringify([...savedDigitalIds]));
+      localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify([...wishlistIds]));
     } catch {
       // Ignore storage quota errors
     }
-  }, [savedDigitalIds]);
+  }, [wishlistIds]);
 
-  const handleToggleSaveDigital = (comboId: string) => {
-    setSavedDigitalIds((prev) => toggleSavedBookId(prev, comboId, VALID_DIGITAL_COMBO_IDS));
+  const handleToggleWishlist = (itemId: string) => {
+    setWishlistIds((prev) => toggleSavedBookId(prev, itemId, VALID_WISHLIST_IDS));
+  };
+
+  const handleClearWishlist = () => {
+    setWishlistIds(new Set<string>());
   };
 
   const visibleDigitalCombos = useMemo(
@@ -569,6 +584,30 @@ export default function App() {
             </button>
 
             <button
+              id="header-wishlist-button"
+              type="button"
+              className={`wishlist-header-trigger whitespace-nowrap shrink-0 ${
+                wishlistIds.size > 0 ? 'has-items' : ''
+              }`}
+              aria-label={`View Wishlist, ${wishlistIds.size} saved items`}
+              aria-haspopup="dialog"
+              onClick={() => setIsWishlistOpen(true)}
+            >
+              <svg viewBox="0 0 24 24" className="wishlist-header-icon" aria-hidden="true">
+                <path
+                  d="M12 20.25S4 14.9 4 9.35A4.6 4.6 0 0 1 8.6 4.75c1.55 0 2.75.78 3.4 1.85.65-1.07 1.85-1.85 3.4-1.85A4.6 4.6 0 0 1 20 9.35c0 5.55-8 10.9-8 10.9Z"
+                  fill={wishlistIds.size > 0 ? '#E85B78' : 'none'}
+                  stroke={wishlistIds.size > 0 ? '#E85B78' : 'currentColor'}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="wishlist-header-label">View Wishlist</span>
+              <span className="wishlist-count tabular-nums">{wishlistIds.size}</span>
+            </button>
+
+            <button
               id="header-studio-bag-button"
               type="button"
               className="studio-bag-trigger whitespace-nowrap shrink-0"
@@ -713,6 +752,12 @@ export default function App() {
                   <div className="book-mat cocowyo-shelf-stage">
                     <div className="cocowyo-shelf-curtains" aria-hidden="true" />
                     <div className="cocowyo-shelf-wood" aria-hidden="true" />
+                    <WishlistHeartButton
+                      itemId={book.id}
+                      itemTitle={book.title}
+                      isSaved={wishlistIds.has(book.id)}
+                      onToggle={handleToggleWishlist}
+                    />
                     <a
                       className="book-art"
                       href={`#${book.id}-details`}
@@ -806,9 +851,9 @@ export default function App() {
           combos={visibleDigitalCombos}
           totalComboCount={DIGITAL_COMBO_PACKS.length}
           isExpanded={isDigitalExpanded}
-          savedIds={savedDigitalIds}
+          savedIds={wishlistIds}
           onToggleExpand={() => setIsDigitalExpanded((prev) => !prev)}
-          onToggleSave={handleToggleSaveDigital}
+          onToggleSave={handleToggleWishlist}
           onSelectCombo={(combo) => setActiveComboPreview(combo)}
         />
 
@@ -870,6 +915,12 @@ export default function App() {
                       {sticker.badge && (
                         <span className="store-corner-tag">{sticker.badge}</span>
                       )}
+                      <WishlistHeartButton
+                        itemId={sticker.id}
+                        itemTitle={sticker.title}
+                        isSaved={wishlistIds.has(sticker.id)}
+                        onToggle={handleToggleWishlist}
+                      />
                       <div className="sticker-diecut-sheet">
                         <img
                           src={sticker.primaryImage}
@@ -965,9 +1016,11 @@ export default function App() {
           packs={filteredLaptopStickers}
           selectedFinish={laptopStickerFinish}
           bagQuantities={bagQuantities}
+          wishlistIds={wishlistIds}
           recentlyAddedId={recentlyAddedId}
           onSelectFinish={setLaptopStickerFinish}
           onAddToBag={handleAddToBag}
+          onToggleWishlist={handleToggleWishlist}
           onPreviewPack={(pack) => setActiveLaptopStickerPreview(pack)}
           onOpenBag={() => setIsBagOpen(true)}
           totalBagItems={bagSummary.totalItems}
@@ -979,10 +1032,12 @@ export default function App() {
           selectedCategory={kidsBeddingCategory}
           selectedSizes={selectedBeddingSizes}
           bagQuantities={bagQuantities}
+          wishlistIds={wishlistIds}
           recentlyAddedId={recentlyAddedId}
           onSelectCategory={setKidsBeddingCategory}
           onSelectSize={handleSelectBeddingSize}
           onAddToBag={handleAddToBag}
+          onToggleWishlist={handleToggleWishlist}
           onPreviewItem={(item) => setActiveBeddingPreview(item)}
           onOpenBag={() => setIsBagOpen(true)}
           totalBagItems={bagSummary.totalItems}
@@ -1033,6 +1088,12 @@ export default function App() {
                       {pdfBook.badge && (
                         <span className="store-corner-tag">{pdfBook.badge}</span>
                       )}
+                      <WishlistHeartButton
+                        itemId={pdfBook.id}
+                        itemTitle={pdfBook.title}
+                        isSaved={wishlistIds.has(pdfBook.id)}
+                        onToggle={handleToggleWishlist}
+                      />
                       <div className="digital-pdf-folio">
                         <div className="digital-pdf-cover-wrap">
                           <img
@@ -1517,7 +1578,7 @@ export default function App() {
       <CatalogModal
         isOpen={catalogState.open}
         mode={catalogState.mode}
-        savedIds={savedDigitalIds}
+        savedIds={wishlistIds}
         onClose={() => setCatalogState((prev) => ({ ...prev, open: false }))}
         onSelectBook={(book) => setActiveBookPreview(book)}
       />
@@ -1560,10 +1621,10 @@ export default function App() {
 
       <DigitalComboPreviewModal
         combo={activeComboPreview}
-        isSaved={Boolean(activeComboPreview && savedDigitalIds.has(activeComboPreview.id))}
+        isSaved={Boolean(activeComboPreview && wishlistIds.has(activeComboPreview.id))}
         onClose={() => setActiveComboPreview(null)}
         onAddToBag={handleAddToBag}
-        onToggleSave={handleToggleSaveDigital}
+        onToggleSave={handleToggleWishlist}
       />
 
       <StudioBagModal
@@ -1574,6 +1635,23 @@ export default function App() {
         onClose={() => setIsBagOpen(false)}
         onUpdateQty={handleUpdateBagQty}
         onClearBag={handleClearBag}
+      />
+
+      <WishlistModal
+        isOpen={isWishlistOpen}
+        wishlistIds={wishlistIds}
+        selectedBeddingSizes={selectedBeddingSizes}
+        bagQuantities={bagQuantities}
+        onClose={() => setIsWishlistOpen(false)}
+        onToggleWishlist={handleToggleWishlist}
+        onClearWishlist={handleClearWishlist}
+        onAddToBag={handleAddToBag}
+        onPreviewBook={(book) => setActiveBookPreview(book)}
+        onPreviewSticker={(sticker) => setActiveStickerPreview(sticker)}
+        onPreviewLaptopSticker={(pack) => setActiveLaptopStickerPreview(pack)}
+        onPreviewBedding={(item) => setActiveBeddingPreview(item)}
+        onPreviewPdf={(pdfBook) => setActivePdfPreview(pdfBook)}
+        onPreviewCombo={(combo) => setActiveComboPreview(combo)}
       />
     </>
   );
