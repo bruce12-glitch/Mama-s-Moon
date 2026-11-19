@@ -286,21 +286,53 @@ export default function App() {
   const inlineVideoRef = useRef<HTMLVideoElement | null>(null);
   const [clipPausedByUser, setClipPausedByUser] = useState<boolean>(false);
 
-  // Gift tab scroll observer
+  // Gift tab scroll observer (auto-hides inside #color, near footer, and over store grids on <1580px viewports)
   useEffect(() => {
     if (giftDismissed) return;
-    const colorSection = document.getElementById('color');
+    const hideSelectors = [
+      '#books',
+      '#digital',
+      '#collections',
+      '#laptop-stickers',
+      '#kids-bedding',
+      '#digital-books',
+      '#color',
+    ];
+    const footerSection = document.querySelector('footer.footer');
     const handleScroll = () => {
-      const scrolledPastHero = window.scrollY > 450;
+      const scrolledPastHero = window.scrollY > 480;
+      const isNarrowForSideTab = window.innerWidth < 1580;
+      let storeGridAtBottom = false;
+      const colorSection = document.getElementById('color');
       let colorInView = false;
       if (colorSection) {
         const rect = colorSection.getBoundingClientRect();
         colorInView = rect.top < window.innerHeight && rect.bottom > 0;
       }
-      setShowGiftTab(scrolledPastHero && !colorInView);
+      if (isNarrowForSideTab) {
+        for (const sel of hideSelectors) {
+          const el = document.querySelector(sel);
+          if (!el) continue;
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 16 && rect.bottom > window.innerHeight - 96) {
+            storeGridAtBottom = true;
+            break;
+          }
+        }
+      }
+      let footerInView = false;
+      if (footerSection) {
+        const footerRect = footerSection.getBoundingClientRect();
+        footerInView = footerRect.top < window.innerHeight + 40;
+      }
+      setShowGiftTab(scrolledPastHero && !colorInView && !footerInView && !storeGridAtBottom);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [giftDismissed]);
 
   // Inline coloring video viewport observer
@@ -615,6 +647,22 @@ export default function App() {
               aria-haspopup="dialog"
               onClick={() => setIsBagOpen(true)}
             >
+              <svg viewBox="0 0 24 24" className="studio-bag-icon" aria-hidden="true">
+                <path
+                  d="M6.5 9h11l1 10.5H5.5L6.5 9Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.95"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M9.25 9V6.8a2.75 2.75 0 0 1 5.5 0V9"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.95"
+                  strokeLinecap="round"
+                />
+              </svg>
               <span className="studio-bag-label">Studio Bag</span>
               <span className="studio-bag-count tabular-nums">{bagSummary.totalItems}</span>
             </button>
@@ -622,31 +670,14 @@ export default function App() {
         </div>
 
         <nav id="main-nav" className="main-nav shell" aria-label="Main">
-          <a href="#books">Our books</a>
+          <a href="#books">Books</a>
           <a href="#digital">Digital</a>
           <a href="#collections">Stickers</a>
-          <a href="#laptop-stickers">Laptop Stickers</a>
+          <a href="#laptop-stickers">Laptop Decals</a>
           <a href="#kids-bedding">Kids Bedding</a>
-          <a href="#digital-books">Digital PDFs</a>
-          <a href="#story">Our little world</a>
-          <a href="#color">Free page</a>
+          <a href="#digital-books">PDFs</a>
+          <a href="#color">Free Studio</a>
           <a href="#faq">FAQs</a>
-          <a
-            href="https://www.amazon.com/s?k=Mamas+Moon+coloring+books"
-            className="amazon-nav"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Shop on Amazon <span aria-hidden="true">↗</span>
-          </a>
-          <a
-            href="https://www.etsy.com/search?q=Mamas+Moon+coloring+books"
-            className="etsy-nav"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Find us on Etsy <span aria-hidden="true">↗</span>
-          </a>
         </nav>
       </header>
 
@@ -1306,6 +1337,9 @@ export default function App() {
                       />
                     </svg>
                   </span>
+                  <span className="amazon-tile-meta">
+                    Paperback &amp; Hardcover Editions · Prime Delivery
+                  </span>
                   <span className="amazon-tile-copy">
                     Meet your next coloring companion <span aria-hidden="true">↗</span>
                   </span>
@@ -1335,6 +1369,9 @@ export default function App() {
                         strokeLinecap="round"
                       />
                     </svg>
+                  </span>
+                  <span className="amazon-tile-meta">
+                    Instant 300 DPI PDFs · Vinyl Decals · Kids Bedding
                   </span>
                   <span className="amazon-tile-copy">
                     Visit our little Etsy shop <span aria-hidden="true">↗</span>
