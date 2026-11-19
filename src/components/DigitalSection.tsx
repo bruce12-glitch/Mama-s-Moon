@@ -140,8 +140,8 @@ export const DigitalSection: React.FC<DigitalSectionProps> = ({
                     aria-pressed={isSaved}
                     aria-label={
                       isSaved
-                        ? `Remove ${combo.title} from favorites`
-                        : `Save ${combo.title} to favorites`
+                        ? `Remove ${combo.title} from wishlist`
+                        : `Save ${combo.title} to wishlist`
                     }
                     onClick={() => onToggleSave(combo.id)}
                   >
