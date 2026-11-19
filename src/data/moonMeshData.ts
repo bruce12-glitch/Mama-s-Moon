@@ -90,6 +90,32 @@ export interface LaptopStickerProduct {
   keywords: string;
 }
 
+export type KidsBeddingCategory = 'all' | 'sheet-set' | 'quilt' | 'room-bundle';
+
+export type KidsBeddingSize = 'Toddler / Crib' | 'Twin' | 'Full';
+
+export interface KidsBeddingProduct {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: Exclude<KidsBeddingCategory, 'all'>;
+  categoryLabel: string;
+  price: number;
+  compareAtPrice?: number;
+  pieceCount: string;
+  fabricSpec: string;
+  threadCount: string;
+  careSpec: string;
+  availableSizes: KidsBeddingSize[];
+  defaultSize: KidsBeddingSize;
+  description: string;
+  image: string;
+  bgTint: string;
+  etsyUrl: string;
+  badge?: string;
+  keywords: string;
+}
+
 export interface DigitalPdfProduct {
   id: string;
   number: string;
@@ -462,6 +488,93 @@ export const LAPTOP_STICKER_PACKS: LaptopStickerProduct[] = [
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+complete+laptop+sticker+bundle',
     badge: 'SAVE $3',
     keywords: 'laptop stickers bundle lid set macbook crew miso plum pip sprout vinyl decal',
+  },
+];
+
+export const KIDS_BEDDING_COLLECTION: KidsBeddingProduct[] = [
+  {
+    id: 'bedding-moon-picnic-sheets',
+    title: 'Miso & Moonbeams Organic Bedsheet Set',
+    subtitle: 'Cream ivory percale cotton sheets printed with sleepy Miso kittens, crescent moons, and tiny stars.',
+    category: 'sheet-set',
+    categoryLabel: 'Sheet Set',
+    price: 48.0,
+    pieceCount: 'Fitted, flat & pillowcase',
+    fabricSpec: '100% GOTS Organic Percale',
+    threadCount: '300-thread-count breathable weave',
+    careSpec: 'OEKO-TEX Standard 100 · Machine wash cold',
+    availableSizes: ['Toddler / Crib', 'Twin', 'Full'],
+    defaultSize: 'Twin',
+    description:
+      'Cool, crisp, and story-soft organic cotton percale woven for peaceful bedtime wind-downs. Features gentle hand-drawn Miso kitten and crescent moon prints with deep 14-inch elastic pockets that stay snug through pillow forts and midnight wiggles.',
+    image: '/src/assets/images/kids_bedsheet_moon_picnic_1795066221119.jpg',
+    bgTint: '#FBF5E8',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+organic+kids+bedsheet+set',
+    badge: '100% ORGANIC COTTON',
+    keywords: 'bedsheet kids bed sheets cotton percale toddler crib twin full miso kitten moon nursery',
+  },
+  {
+    id: 'bedding-starlight-garden-sheets',
+    title: "Sprout's Starlight Garden Fitted Sheet & Sham",
+    subtitle: 'Botanical sage-and-cream cotton fitted bedsheet paired with a storybook ruffled pillow sham.',
+    category: 'sheet-set',
+    categoryLabel: 'Sheet Set',
+    price: 42.0,
+    pieceCount: 'Fitted sheet + ruffled sham',
+    fabricSpec: 'Washed Organic Cotton Muslin',
+    threadCount: '280-thread-count soft drape',
+    careSpec: 'Pre-washed for day-one softness',
+    availableSizes: ['Toddler / Crib', 'Twin'],
+    defaultSize: 'Toddler / Crib',
+    description:
+      'Brushed botanical linen adorned with Sprout the snail, morning daisies, and golden tulips. Designed for toddler rails and twin daybed frames with hypoallergenic low-impact botanical dyes that grow softer with every laundry cycle.',
+    image: '/src/assets/images/kids_bedsheet_starlight_garden_1795066221249.jpg',
+    bgTint: '#EEF5EC',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+garden+kids+fitted+bedsheet',
+    keywords: 'bedsheet toddler nursery crib garden snail sprout sheet set cotton ruffled sham kids room',
+  },
+  {
+    id: 'bedding-midnight-kittens-quilt',
+    title: 'Midnight Kittens Reversible Cotton Quilt',
+    subtitle: 'Hand-quilted dusty lavender and buttercream blanket woven with sleepy kitten & paper lantern motifs.',
+    category: 'quilt',
+    categoryLabel: 'Blanket & Quilt',
+    price: 64.0,
+    pieceCount: 'Reversible quilt + 1 sham',
+    fabricSpec: 'Double-Gauze Cotton & Poly Fill',
+    threadCount: 'Diamond-stitched cozy loft',
+    careSpec: 'Machine washable · Low heat dry',
+    availableSizes: ['Toddler / Crib', 'Twin', 'Full'],
+    defaultSize: 'Twin',
+    description:
+      'Flip between dreamy twilight lavender and warm buttercream morning gold whenever the mood strikes. Breathable cotton shell and featherlight loft keep young sleepers warm without overheating during storytime.',
+    image: '/src/assets/images/kids_quilt_midnight_kittens_1795066223442.jpg',
+    bgTint: '#F2ECF8',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+midnight+kittens+kids+quilt',
+    badge: 'REVERSIBLE QUILT',
+    keywords: 'quilt blanket comforter kids bedroom bedsheet coverlet lavender buttercream kittens',
+  },
+  {
+    id: 'bedding-cozy-crew-room-bundle',
+    title: "Complete Mama's Moon Kid's Room Linen Bundle",
+    subtitle: 'Blush-peach sheet set, embroidered star pillowcase, and heirloom knit throw tied with cotton ribbon.',
+    category: 'room-bundle',
+    categoryLabel: 'Room Bundle',
+    price: 96.0,
+    compareAtPrice: 118.0,
+    pieceCount: '4-pc linen + knit throw',
+    fabricSpec: 'Organic Cotton Percale & Knit',
+    threadCount: '300-TC sheets + waffle knit throw',
+    careSpec: 'Gift-wrapped in reusable cotton bag',
+    availableSizes: ['Toddler / Crib', 'Twin', 'Full'],
+    defaultSize: 'Twin',
+    description:
+      'Everything needed to dress a newly painted nursery or big-kid bed in one thoughtful box. Pairs our breathable blush-peach fitted and flat sheets with an embroidered star pillowcase and cream heirloom knit throw.',
+    image: '/src/assets/images/kids_bedding_bundle_cozy_crew_1795066222390.jpg',
+    bgTint: '#FDF1EB',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+kids+room+bedding+bundle',
+    badge: 'SAVE $22',
+    keywords: 'kids room bedding bundle bedsheet throw blanket nursery gift twin full toddler linen',
   },
 ];
 
@@ -942,6 +1055,13 @@ export const CATALOG_SECTIONS = [
     href: '#laptop-stickers',
     image: '/assets/laptop-sticker-starlight-pack.jpg',
     keywords: 'laptop stickers macbook vinyl decal holographic matte removable lid case tablet',
+  },
+  {
+    title: 'Kids Bedsheets & Cozy Room',
+    theme: '100% organic cotton sheets, reversible quilts & nursery bundles',
+    href: '#kids-bedding',
+    image: '/src/assets/images/kids_bedsheet_moon_picnic_1795066221119.jpg',
+    keywords: 'kids bedsheet sheets blanket quilt nursery toddler twin full room linen bedding',
   },
   {
     title: 'Digital PDF Coloring Books',

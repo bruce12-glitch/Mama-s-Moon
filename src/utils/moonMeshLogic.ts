@@ -303,3 +303,16 @@ export function filterLaptopStickers<T extends { finish: string }>(
   return packs.filter((item) => item.finish === finish);
 }
 
+/**
+ * Filters kids bedsheets, quilts, and nursery room linen bundles by category.
+ */
+export function filterKidsBeddingProducts<T extends { category: string }>(
+  items: T[],
+  category: 'all' | string
+): T[] {
+  if (!category || category === 'all') {
+    return items;
+  }
+  return items.filter((item) => item.category === category);
+}
+

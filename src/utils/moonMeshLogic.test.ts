@@ -15,12 +15,14 @@ import {
   calculateStudioBagSummary,
   getVisibleDigitalCombos,
   filterLaptopStickers,
+  filterKidsBeddingProducts,
 } from './moonMeshLogic';
 import {
   HERO_SLIDES,
   BOOKS,
   STICKER_COLLECTIONS,
   LAPTOP_STICKER_PACKS,
+  KIDS_BEDDING_COLLECTION,
   DIGITAL_PDF_BOOKS,
   DIGITAL_COMBO_PACKS,
 } from '../data/moonMeshData';
@@ -281,6 +283,41 @@ test('calculateStudioBagSummary includes Laptop Sticker packs accurately', () =>
   );
   assert.equal(summary.totalItems, 3);
   assert.equal(summary.subtotal, 26.5);
+  assert.equal(summary.qualifiesForFreeShipping, true);
+  assert.equal(summary.amountToFreeShipping, 0);
+});
+
+test('filterKidsBeddingProducts filters KIDS_BEDDING_COLLECTION by category accurately', () => {
+  assert.equal(KIDS_BEDDING_COLLECTION.length, 4);
+  assert.equal(filterKidsBeddingProducts(KIDS_BEDDING_COLLECTION, 'all').length, 4);
+
+  const sheets = filterKidsBeddingProducts(KIDS_BEDDING_COLLECTION, 'sheet-set');
+  assert.equal(sheets.length, 2);
+  assert.ok(sheets.every((item) => item.category === 'sheet-set'));
+
+  const quilts = filterKidsBeddingProducts(KIDS_BEDDING_COLLECTION, 'quilt');
+  assert.equal(quilts.length, 1);
+  assert.equal(quilts[0].id, 'bedding-midnight-kittens-quilt');
+
+  const bundles = filterKidsBeddingProducts(KIDS_BEDDING_COLLECTION, 'room-bundle');
+  assert.equal(bundles.length, 1);
+  assert.equal(bundles[0].id, 'bedding-cozy-crew-room-bundle');
+});
+
+test('calculateStudioBagSummary includes Kids Bedding items accurately', () => {
+  const priceMap: Record<string, number> = {};
+  for (const item of KIDS_BEDDING_COLLECTION) priceMap[item.id] = item.price;
+
+  const summary = calculateStudioBagSummary(
+    {
+      'bedding-moon-picnic-sheets': 1, // 48.00
+      'bedding-starlight-garden-sheets': 1, // 42.00
+    },
+    priceMap,
+    25
+  );
+  assert.equal(summary.totalItems, 2);
+  assert.equal(summary.subtotal, 90);
   assert.equal(summary.qualifiesForFreeShipping, true);
   assert.equal(summary.amountToFreeShipping, 0);
 });
