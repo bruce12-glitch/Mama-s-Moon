@@ -290,4 +290,16 @@ export function getVisibleDigitalCombos<T>(
   return combos.slice(0, initialCount);
 }
 
+/**
+ * Filters laptop sticker packs by vinyl finish ('all' | 'matte' | 'holographic' | 'lid-set').
+ */
+export function filterLaptopStickers<T extends { finish: string }>(
+  packs: T[],
+  finish: 'all' | string
+): T[] {
+  if (!finish || finish === 'all') {
+    return packs;
+  }
+  return packs.filter((item) => item.finish === finish);
+}
 

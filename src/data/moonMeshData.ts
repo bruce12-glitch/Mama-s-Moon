@@ -68,6 +68,28 @@ export interface StickerProduct {
   badge?: string;
 }
 
+export type LaptopStickerFinish = 'all' | 'matte' | 'holographic' | 'lid-set';
+
+export interface LaptopStickerProduct {
+  id: string;
+  title: string;
+  subtitle: string;
+  finish: Exclude<LaptopStickerFinish, 'all'>;
+  finishLabel: string;
+  price: number;
+  compareAtPrice?: number;
+  decalCount: number;
+  sizeSpec: string;
+  materialSpec: string;
+  fitDevices: string;
+  description: string;
+  image: string;
+  bgTint: string;
+  etsyUrl: string;
+  badge?: string;
+  keywords: string;
+}
+
 export interface DigitalPdfProduct {
   id: string;
   number: string;
@@ -363,6 +385,83 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     bgTint: '#FFF8DF',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+sticker+bundle',
     badge: 'SAVE $5',
+  },
+];
+
+export const LAPTOP_STICKER_PACKS: LaptopStickerProduct[] = [
+  {
+    id: 'laptop-sticker-cozy-miso',
+    title: 'Cozy Miso & Cocoa Laptop Set',
+    subtitle: 'Oversized matte vinyl decals with reading glasses Miso, cocoa mug, and crescent moon.',
+    finish: 'matte',
+    finishLabel: 'Matte Vinyl',
+    price: 8.5,
+    decalCount: 5,
+    sizeSpec: '3.0" – 3.8" wide',
+    materialSpec: 'Waterproof UV matte laminate',
+    fitDevices: '13"–16" MacBook, ThinkPad & iPad cases',
+    description:
+      'Built for coffee-shop study sessions and late-night sketching. Each thick contour-cut decal uses low-tack removable adhesive that peels off aluminum laptop lids cleanly without leaving residue.',
+    image: '/assets/laptop-sticker-cozy-coder.jpg',
+    bgTint: '#F8EFE0',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+cozy+miso+laptop+stickers',
+    keywords: 'laptop stickers vinyl decal macbook miso kitten cocoa mug matte removable',
+  },
+  {
+    id: 'laptop-sticker-moon-desk',
+    title: 'Plum & Pip Starlight Lid Pack',
+    subtitle: 'Satin holographic laptop decals featuring Plum reading on a cloud, Pip, and moon charms.',
+    finish: 'holographic',
+    finishLabel: 'Holographic',
+    price: 9.5,
+    decalCount: 5,
+    sizeSpec: '2.8" – 3.9" wide',
+    materialSpec: 'Prismatic satin holo film',
+    fitDevices: 'Laptop lids, tablet folios & studio sleeves',
+    description:
+      'Catches soft pastel rainbows when you tilt your laptop screen in morning light. Scratch-resistant satin laminate protects against backpack friction while staying crisp and smudge-free.',
+    image: '/assets/laptop-sticker-moon-desk.jpg',
+    bgTint: '#F1EAF8',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+starlight+holographic+laptop+stickers',
+    keywords: 'laptop stickers holographic plum bunny pip star sketchbook lid decal macbook',
+  },
+  {
+    id: 'laptop-sticker-garden-break',
+    title: "Sprout's Garden Break Decals",
+    subtitle: 'Botanical matte vinyl stickers with Sprout the snail, daisies, watering can, and berry tart.',
+    finish: 'matte',
+    finishLabel: 'Matte Vinyl',
+    price: 8.5,
+    decalCount: 4,
+    sizeSpec: '3.0" – 3.6" wide',
+    materialSpec: 'Scratch-proof matte vinyl',
+    fitDevices: 'MacBook Air, Chromebooks & studio cases',
+    description:
+      'A gentle botanical breather for your everyday carry. Heavyweight 4-mil vinyl resists water splashes, sunlight fading, and daily sleeve slides while peeling cleanly whenever you refresh your lid.',
+    image: '/assets/laptop-sticker-garden-break.jpg',
+    bgTint: '#ECF4E8',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+sprout+garden+laptop+stickers',
+    keywords: 'laptop stickers sprout snail tulip daisy botanical matte vinyl removable decal',
+  },
+  {
+    id: 'laptop-sticker-full-crew-lid',
+    title: 'Complete Miso & Friends Lid Bundle',
+    subtitle: 'All four characters sized specifically for a balanced laptop corner collage plus bonus mini stars.',
+    finish: 'lid-set',
+    finishLabel: 'Laptop Lid Set',
+    price: 14.0,
+    compareAtPrice: 17.0,
+    decalCount: 8,
+    sizeSpec: '2.6" – 4.0" wide',
+    materialSpec: 'Residue-free matte UV vinyl',
+    fitDevices: 'Fits 13"–16" laptops & tablet cases',
+    description:
+      'Our flagship curated lid layout featuring Miso, Plum, Pip, and Sprout sized to sit neatly together around any laptop emblem without crowding your hinges or corners.',
+    image: '/assets/laptop-sticker-starlight-pack.jpg',
+    bgTint: '#FBF1E4',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+complete+laptop+sticker+bundle',
+    badge: 'SAVE $3',
+    keywords: 'laptop stickers bundle lid set macbook crew miso plum pip sprout vinyl decal',
   },
 ];
 
@@ -836,6 +935,13 @@ export const CATALOG_SECTIONS = [
     href: '#collections',
     image: '/assets/our-little-crew.webp',
     keywords: 'stickers vinyl die-cut kiss-cut sheet bundle pack miso pip plum sprout shop',
+  },
+  {
+    title: 'Laptop Stickers',
+    theme: 'Residue-free 3–4" matte & holographic lid decals',
+    href: '#laptop-stickers',
+    image: '/assets/laptop-sticker-starlight-pack.jpg',
+    keywords: 'laptop stickers macbook vinyl decal holographic matte removable lid case tablet',
   },
   {
     title: 'Digital PDF Coloring Books',
