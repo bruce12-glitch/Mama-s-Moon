@@ -5,6 +5,7 @@ import {
   KidsBeddingSize,
 } from '../data/moonMeshData';
 import { BrandName } from './BrandName';
+import { WishlistHeartButton } from './WishlistHeartButton';
 
 const BEDDING_CATEGORY_TABS: { id: KidsBeddingCategory; label: string }[] = [
   { id: 'all', label: 'All Bedding (4)' },
@@ -18,9 +19,11 @@ interface KidsBeddingSectionProps {
   selectedCategory: KidsBeddingCategory;
   selectedSizes: Record<string, KidsBeddingSize>;
   bagQuantities: Record<string, number>;
+  wishlistIds: Set<string>;
   recentlyAddedId: string | null;
   onSelectCategory: (category: KidsBeddingCategory) => void;
   onSelectSize: (productId: string, size: KidsBeddingSize) => void;
+  onToggleWishlist: (productId: string) => void;
   onAddToBag: (productId: string) => void;
   onPreviewItem: (item: KidsBeddingProduct) => void;
   onOpenBag: () => void;
@@ -32,9 +35,11 @@ export const KidsBeddingSection: React.FC<KidsBeddingSectionProps> = ({
   selectedCategory,
   selectedSizes,
   bagQuantities,
+  wishlistIds,
   recentlyAddedId,
   onSelectCategory,
   onSelectSize,
+  onToggleWishlist,
   onAddToBag,
   onPreviewItem,
   onOpenBag,
@@ -99,36 +104,44 @@ export const KidsBeddingSection: React.FC<KidsBeddingSectionProps> = ({
 
             return (
               <article key={item.id} className="kids-bedding-card" id={item.id}>
-                <button
-                  type="button"
-                  className="kids-bedding-stage"
-                  style={{ backgroundColor: item.bgTint }}
-                  aria-label={`Inspect ${item.title}`}
-                  onClick={() => onPreviewItem(item)}
-                >
-                  {item.badge && <span className="store-corner-tag">{item.badge}</span>}
-                  <div className="kids-bedding-photo-wrap">
-                    {!imageFailed ? (
-                      <img
-                        src={item.image}
-                        width={800}
-                        height={600}
-                        alt={item.title}
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        className="kids-bedding-img"
-                        onError={() =>
-                          setFailedImages((prev) => ({ ...prev, [item.id]: true }))
-                        }
-                      />
-                    ) : (
-                      <div className="kids-bedding-fallback" aria-label={item.title}>
-                        <span>{item.categoryLabel}</span>
-                        <strong>{item.title}</strong>
-                      </div>
-                    )}
-                  </div>
-                </button>
+                <div className="card-stage-wrap">
+                  <button
+                    type="button"
+                    className="kids-bedding-stage"
+                    style={{ backgroundColor: item.bgTint }}
+                    aria-label={`Inspect ${item.title}`}
+                    onClick={() => onPreviewItem(item)}
+                  >
+                    {item.badge && <span className="store-corner-tag">{item.badge}</span>}
+                    <div className="kids-bedding-photo-wrap">
+                      {!imageFailed ? (
+                        <img
+                          src={item.image}
+                          width={800}
+                          height={600}
+                          alt={item.title}
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                          className="kids-bedding-img"
+                          onError={() =>
+                            setFailedImages((prev) => ({ ...prev, [item.id]: true }))
+                          }
+                        />
+                      ) : (
+                        <div className="kids-bedding-fallback" aria-label={item.title}>
+                          <span>{item.categoryLabel}</span>
+                          <strong>{item.title}</strong>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                  <WishlistHeartButton
+                    itemId={item.id}
+                    itemTitle={item.title}
+                    isSaved={wishlistIds.has(item.id)}
+                    onToggle={onToggleWishlist}
+                  />
+                </div>
 
                 <div className="kids-bedding-body">
                   <p className="store-meta-line">

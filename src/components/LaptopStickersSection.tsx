@@ -1,6 +1,7 @@
 import React from 'react';
 import { LaptopStickerFinish, LaptopStickerProduct } from '../data/moonMeshData';
 import { BrandName } from './BrandName';
+import { WishlistHeartButton } from './WishlistHeartButton';
 
 const LAPTOP_FINISH_TABS: { id: LaptopStickerFinish; label: string }[] = [
   { id: 'all', label: 'All Decals (4)' },
@@ -13,8 +14,10 @@ interface LaptopStickersSectionProps {
   packs: LaptopStickerProduct[];
   selectedFinish: LaptopStickerFinish;
   bagQuantities: Record<string, number>;
+  wishlistIds: Set<string>;
   recentlyAddedId: string | null;
   onSelectFinish: (finish: LaptopStickerFinish) => void;
+  onToggleWishlist: (productId: string) => void;
   onAddToBag: (productId: string) => void;
   onPreviewPack: (pack: LaptopStickerProduct) => void;
   onOpenBag: () => void;
@@ -25,8 +28,10 @@ export const LaptopStickersSection: React.FC<LaptopStickersSectionProps> = ({
   packs,
   selectedFinish,
   bagQuantities,
+  wishlistIds,
   recentlyAddedId,
   onSelectFinish,
+  onToggleWishlist,
   onAddToBag,
   onPreviewPack,
   onOpenBag,
@@ -87,26 +92,34 @@ export const LaptopStickersSection: React.FC<LaptopStickersSectionProps> = ({
 
             return (
               <article key={pack.id} className="laptop-sticker-card" id={pack.id}>
-                <button
-                  type="button"
-                  className="laptop-sticker-stage"
-                  style={{ backgroundColor: pack.bgTint }}
-                  aria-label={`Preview ${pack.title} on laptop lid`}
-                  onClick={() => onPreviewPack(pack)}
-                >
-                  {pack.badge && <span className="store-corner-tag">{pack.badge}</span>}
-                  <div className="laptop-sticker-photo-wrap">
-                    <img
-                      src={pack.image}
-                      width={800}
-                      height={600}
-                      alt={pack.title}
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      className="laptop-sticker-img"
-                    />
-                  </div>
-                </button>
+                <div className="card-stage-wrap">
+                  <button
+                    type="button"
+                    className="laptop-sticker-stage"
+                    style={{ backgroundColor: pack.bgTint }}
+                    aria-label={`Preview ${pack.title} on laptop lid`}
+                    onClick={() => onPreviewPack(pack)}
+                  >
+                    {pack.badge && <span className="store-corner-tag">{pack.badge}</span>}
+                    <div className="laptop-sticker-photo-wrap">
+                      <img
+                        src={pack.image}
+                        width={800}
+                        height={600}
+                        alt={pack.title}
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        className="laptop-sticker-img"
+                      />
+                    </div>
+                  </button>
+                  <WishlistHeartButton
+                    itemId={pack.id}
+                    itemTitle={pack.title}
+                    isSaved={wishlistIds.has(pack.id)}
+                    onToggle={onToggleWishlist}
+                  />
+                </div>
 
                 <div className="laptop-sticker-body">
                   <p className="store-meta-line">
