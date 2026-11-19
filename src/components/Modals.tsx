@@ -4,9 +4,11 @@ import {
   CATALOG_SECTIONS,
   STICKER_COLLECTIONS,
   DIGITAL_PDF_BOOKS,
+  DIGITAL_COMBO_PACKS,
   BookItem,
   StickerProduct,
   DigitalPdfProduct,
+  DigitalComboProduct,
 } from '../data/moonMeshData';
 import { filterCatalogItems, StudioBagSummary } from '../utils/moonMeshLogic';
 import { BrandName } from './BrandName';
@@ -53,6 +55,15 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
       image: b.coverImage,
       href: undefined as string | undefined,
       book: b as BookItem | undefined,
+    })),
+    ...DIGITAL_COMBO_PACKS.map((c) => ({
+      id: c.id as string | undefined,
+      title: c.title,
+      theme: `Digital · ${c.pageCount} pages · $${c.price.toFixed(2)}`,
+      keywords: `${c.subtitle} ${c.description} ${c.keywords}`,
+      image: c.coverImage,
+      href: `#${c.id}` as string | undefined,
+      book: undefined as BookItem | undefined,
     })),
     ...(mode === 'search'
       ? [
@@ -503,6 +514,122 @@ export const DigitalPdfPreviewModal: React.FC<DigitalPdfPreviewModalProps> = ({
   );
 };
 
+export interface DigitalComboPreviewModalProps {
+  combo: DigitalComboProduct | null;
+  isSaved: boolean;
+  onClose: () => void;
+  onAddToBag: (productId: string) => void;
+  onToggleSave: (productId: string) => void;
+}
+
+export const DigitalComboPreviewModal: React.FC<DigitalComboPreviewModalProps> = ({
+  combo,
+  isSaved,
+  onClose,
+  onAddToBag,
+  onToggleSave,
+}) => {
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const [showColoredSample, setShowColoredSample] = useState(false);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (combo && !dialog.open) {
+      setShowColoredSample(false);
+      dialog.showModal();
+    } else if (!combo && dialog.open) {
+      dialog.close();
+    }
+  }, [combo]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      id="digital-combo-dialog"
+      className="dialog book-dialog"
+      aria-labelledby="combo-modal-title"
+      onClose={onClose}
+    >
+      <div className="dialog-close">
+        <button type="button" aria-label="Close digital combo preview" onClick={onClose}>
+          <svg className="icon" aria-hidden="true">
+            <use href="#close" />
+          </svg>
+        </button>
+      </div>
+      {combo && (
+        <>
+          <div className="preview-art flex-col gap-3" style={{ background: combo.coverBg }}>
+            <div className="pdf-modal-sheet-frame">
+              <img
+                src={showColoredSample ? combo.sampleColoredSvg : combo.coverImage}
+                alt={
+                  showColoredSample
+                    ? `Colored sample page from ${combo.title}`
+                    : `${combo.title} cover artwork`
+                }
+                className="pdf-modal-sheet-img"
+              />
+            </div>
+            <button
+              type="button"
+              className="button button-paper text-xs py-1.5 px-3.5 whitespace-nowrap"
+              onClick={() => setShowColoredSample((prev) => !prev)}
+            >
+              {showColoredSample ? 'View Combo Cover' : 'Preview Colored Sample Page'}
+            </button>
+          </div>
+          <div className="preview-copy">
+            <p className="eyebrow">
+              <svg className="icon" aria-hidden="true">
+                <use href="#spark" />
+              </svg>{' '}
+              {combo.comboLabel} · {combo.pageCount} Digital Coloring Pages
+            </p>
+            <h2 id="combo-modal-title">{combo.title}</h2>
+            <p className="mt-2 text-lg font-bold text-[#2C2028] tabular-nums">
+              ${combo.price.toFixed(2)}{' '}
+              <span className="text-xs font-semibold text-[#6F6472]">
+                · Instant PDF Download · {combo.ageRange}
+              </span>
+            </p>
+            <p>{combo.description}</p>
+            <p className="mt-3 text-xs font-semibold text-[#6F6472]">{combo.formatSpec}</p>
+            <div className="dialog-actions">
+              <button
+                type="button"
+                className="button button-ink whitespace-nowrap"
+                onClick={() => {
+                  onAddToBag(combo.id);
+                  onClose();
+                }}
+              >
+                Add to Studio Bag · ${combo.price.toFixed(2)}
+              </button>
+              <button
+                type="button"
+                className="button button-outline whitespace-nowrap"
+                aria-pressed={isSaved}
+                onClick={() => onToggleSave(combo.id)}
+              >
+                {isSaved ? 'Saved ♥' : 'Save Favorite ♡'}
+              </button>
+              <a
+                className="text-link whitespace-nowrap"
+                href={combo.samplePdfUrl}
+                download
+              >
+                Free Sample Sheet (PDF)
+              </a>
+            </div>
+          </div>
+        </>
+      )}
+    </dialog>
+  );
+};
+
 interface StudioBagModalProps {
   isOpen: boolean;
   quantities: Record<string, number>;
@@ -542,6 +669,16 @@ export const StudioBagModal: React.FC<StudioBagModalProps> = ({
       image: s.primaryImage,
       isDigital: false,
       downloadUrl: undefined as string | undefined,
+    })),
+    ...DIGITAL_COMBO_PACKS.filter((c) => (quantities[c.id] || 0) > 0).map((c) => ({
+      id: c.id,
+      title: c.title,
+      meta: `${c.pageCount} Digital Coloring Pages · Instant Download`,
+      price: c.price,
+      qty: quantities[c.id] || 0,
+      image: c.coverImage,
+      isDigital: true,
+      downloadUrl: c.samplePdfUrl,
     })),
     ...DIGITAL_PDF_BOOKS.filter((d) => (quantities[d.id] || 0) > 0).map((d) => ({
       id: d.id,
