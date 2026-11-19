@@ -3,10 +3,12 @@ import {
   BOOKS,
   CATALOG_SECTIONS,
   STICKER_COLLECTIONS,
+  LAPTOP_STICKER_PACKS,
   DIGITAL_PDF_BOOKS,
   DIGITAL_COMBO_PACKS,
   BookItem,
   StickerProduct,
+  LaptopStickerProduct,
   DigitalPdfProduct,
   DigitalComboProduct,
 } from '../data/moonMeshData';
@@ -74,6 +76,15 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
             keywords: `${s.subtitle} ${s.description} ${s.pieceCount} ${s.finishSpec} sticker vinyl sheet pack`,
             image: s.primaryImage,
             href: '#collections' as string | undefined,
+            book: undefined as BookItem | undefined,
+          })),
+          ...LAPTOP_STICKER_PACKS.map((l) => ({
+            id: l.id as string | undefined,
+            title: l.title,
+            theme: `Laptop Stickers · ${l.finishLabel} · $${l.price.toFixed(2)}`,
+            keywords: `${l.subtitle} ${l.description} ${l.materialSpec} ${l.fitDevices} ${l.keywords}`,
+            image: l.image,
+            href: `#${l.id}` as string | undefined,
             book: undefined as BookItem | undefined,
           })),
           ...DIGITAL_PDF_BOOKS.map((d) => ({
@@ -404,6 +415,126 @@ export const StickerPreviewModal: React.FC<StickerPreviewModalProps> = ({
   );
 };
 
+interface LaptopStickerPreviewModalProps {
+  pack: LaptopStickerProduct | null;
+  onClose: () => void;
+  onAddToBag: (productId: string) => void;
+}
+
+export const LaptopStickerPreviewModal: React.FC<LaptopStickerPreviewModalProps> = ({
+  pack,
+  onClose,
+  onAddToBag,
+}) => {
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const [showLidView, setShowLidView] = useState(true);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (pack && !dialog.open) {
+      setShowLidView(true);
+      dialog.showModal();
+    } else if (!pack && dialog.open) {
+      dialog.close();
+    }
+  }, [pack]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      id="laptop-sticker-dialog"
+      className="dialog book-dialog"
+      aria-labelledby="laptop-sticker-modal-title"
+      onClose={onClose}
+    >
+      <div className="dialog-close">
+        <button type="button" aria-label="Close laptop sticker preview" onClick={onClose}>
+          <svg className="icon" aria-hidden="true">
+            <use href="#close" />
+          </svg>
+        </button>
+      </div>
+      {pack && (
+        <>
+          <div className="preview-art flex-col gap-3" style={{ background: pack.bgTint }}>
+            {showLidView ? (
+              <div className="laptop-lid-mockup" aria-label="Laptop lid placement preview">
+                <div className="laptop-lid-surface">
+                  <img
+                    src={pack.image}
+                    alt={`${pack.title} styled on a laptop lid`}
+                    referrerPolicy="no-referrer"
+                    className="laptop-lid-sticker-art"
+                  />
+                  <span className="laptop-lid-hinge" aria-hidden="true" />
+                </div>
+              </div>
+            ) : (
+              <div className="sticker-modal-stage">
+                <img
+                  src={pack.image}
+                  alt={pack.title}
+                  referrerPolicy="no-referrer"
+                  className="sticker-modal-img"
+                />
+              </div>
+            )}
+            <button
+              type="button"
+              className="button button-paper text-xs py-1.5 px-3.5 whitespace-nowrap"
+              onClick={() => setShowLidView((prev) => !prev)}
+            >
+              {showLidView ? 'View Flat Sticker Pack' : 'Preview on Laptop Lid'}
+            </button>
+          </div>
+          <div className="preview-copy">
+            <p className="eyebrow">
+              <svg className="icon" aria-hidden="true">
+                <use href="#spark" />
+              </svg>{' '}
+              {pack.finishLabel} &middot; {pack.decalCount} Laptop Decals
+            </p>
+            <h2 id="laptop-sticker-modal-title">{pack.title}</h2>
+            <p className="mt-2 text-lg font-bold text-[#2C2028] tabular-nums">
+              ${pack.price.toFixed(2)}
+              {pack.compareAtPrice && (
+                <span className="ml-2 text-sm font-normal text-[#847886] line-through">
+                  ${pack.compareAtPrice.toFixed(2)}
+                </span>
+              )}
+            </p>
+            <p>{pack.description}</p>
+            <p className="mt-3 text-xs font-semibold text-[#6F6472]">
+              {pack.materialSpec} &middot; {pack.sizeSpec} &middot; {pack.fitDevices}
+            </p>
+            <div className="dialog-actions">
+              <button
+                type="button"
+                className="button button-ink whitespace-nowrap"
+                onClick={() => {
+                  onAddToBag(pack.id);
+                  onClose();
+                }}
+              >
+                Add to Studio Bag · ${pack.price.toFixed(2)}
+              </button>
+              <a
+                className="text-link whitespace-nowrap"
+                href={pack.etsyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Order on Etsy <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </>
+      )}
+    </dialog>
+  );
+};
+
 interface DigitalPdfPreviewModalProps {
   pdfBook: DigitalPdfProduct | null;
   onClose: () => void;
@@ -667,6 +798,16 @@ export const StudioBagModal: React.FC<StudioBagModalProps> = ({
       price: s.price,
       qty: quantities[s.id] || 0,
       image: s.primaryImage,
+      isDigital: false,
+      downloadUrl: undefined as string | undefined,
+    })),
+    ...LAPTOP_STICKER_PACKS.filter((l) => (quantities[l.id] || 0) > 0).map((l) => ({
+      id: l.id,
+      title: l.title,
+      meta: `Laptop Stickers · ${l.finishLabel} · ${l.decalCount} decals`,
+      price: l.price,
+      qty: quantities[l.id] || 0,
+      image: l.image,
       isDigital: false,
       downloadUrl: undefined as string | undefined,
     })),
