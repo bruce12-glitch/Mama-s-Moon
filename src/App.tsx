@@ -9,19 +9,23 @@ import {
   CREW_MEMBERS,
   FAQ_ITEMS,
   STICKER_COLLECTIONS,
+  LAPTOP_STICKER_PACKS,
   DIGITAL_PDF_BOOKS,
   DIGITAL_COMBO_PACKS,
   BookItem,
   StickerProduct,
+  LaptopStickerProduct,
   DigitalPdfProduct,
   DigitalComboProduct,
   StickerCategory,
+  LaptopStickerFinish,
 } from './data/moonMeshData';
 import {
   validateMoonMailEmail,
   computeBookTiltAngles,
   getForestAudioUiState,
   filterStickerProducts,
+  filterLaptopStickers,
   calculateStudioBagSummary,
   getVisibleDigitalCombos,
   toggleSavedBookId,
@@ -29,11 +33,13 @@ import {
 import { forestAudio } from './utils/forestAudio';
 import { HeroCarousel } from './components/HeroCarousel';
 import { DigitalSection } from './components/DigitalSection';
+import { LaptopStickersSection } from './components/LaptopStickersSection';
 import { ColoringStudioModal } from './components/ColoringStudioModal';
 import {
   CatalogModal,
   BookPreviewModal,
   StickerPreviewModal,
+  LaptopStickerPreviewModal,
   DigitalPdfPreviewModal,
   DigitalComboPreviewModal,
   StudioBagModal,
@@ -89,6 +95,8 @@ export default function App() {
   }>({ open: false, mode: 'search' });
   const [activeBookPreview, setActiveBookPreview] = useState<BookItem | null>(null);
   const [activeStickerPreview, setActiveStickerPreview] = useState<StickerProduct | null>(null);
+  const [activeLaptopStickerPreview, setActiveLaptopStickerPreview] =
+    useState<LaptopStickerProduct | null>(null);
   const [activePdfPreview, setActivePdfPreview] = useState<DigitalPdfProduct | null>(null);
   const [activeComboPreview, setActiveComboPreview] = useState<DigitalComboProduct | null>(null);
   const [isBagOpen, setIsBagOpen] = useState<boolean>(false);
@@ -127,6 +135,7 @@ export default function App() {
 
   // Sticker collection category filter & Studio Bag state
   const [stickerCategory, setStickerCategory] = useState<StickerCategory>('all');
+  const [laptopStickerFinish, setLaptopStickerFinish] = useState<LaptopStickerFinish>('all');
   const [bagQuantities, setBagQuantities] = useState<Record<string, number>>(() => {
     try {
       const raw = localStorage.getItem(STUDIO_BAG_STORAGE_KEY);
@@ -148,6 +157,7 @@ export default function App() {
   const priceLookup = useMemo(() => {
     const map: Record<string, number> = {};
     for (const s of STICKER_COLLECTIONS) map[s.id] = s.price;
+    for (const l of LAPTOP_STICKER_PACKS) map[l.id] = l.price;
     for (const d of DIGITAL_PDF_BOOKS) map[d.id] = d.price;
     for (const c of DIGITAL_COMBO_PACKS) map[c.id] = c.price;
     return map;
@@ -156,6 +166,11 @@ export default function App() {
   const filteredStickers = useMemo(
     () => filterStickerProducts(STICKER_COLLECTIONS, stickerCategory),
     [stickerCategory]
+  );
+
+  const filteredLaptopStickers = useMemo(
+    () => filterLaptopStickers(LAPTOP_STICKER_PACKS, laptopStickerFinish),
+    [laptopStickerFinish]
   );
 
   const bagSummary = useMemo(
@@ -545,6 +560,7 @@ export default function App() {
           <a href="#books">Our books</a>
           <a href="#digital">Digital</a>
           <a href="#collections">Stickers</a>
+          <a href="#laptop-stickers">Laptop Stickers</a>
           <a href="#digital-books">Digital PDFs</a>
           <a href="#story">Our little world</a>
           <a href="#color">Free page</a>
@@ -916,6 +932,19 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        {/* Laptop Stickers Showcase Section */}
+        <LaptopStickersSection
+          packs={filteredLaptopStickers}
+          selectedFinish={laptopStickerFinish}
+          bagQuantities={bagQuantities}
+          recentlyAddedId={recentlyAddedId}
+          onSelectFinish={setLaptopStickerFinish}
+          onAddToBag={handleAddToBag}
+          onPreviewPack={(pack) => setActiveLaptopStickerPreview(pack)}
+          onOpenBag={() => setIsBagOpen(true)}
+          totalBagItems={bagSummary.totalItems}
+        />
 
         {/* Digital PDF Coloring Books Storefront Section */}
         <section
@@ -1364,6 +1393,7 @@ export default function App() {
                 <h2>Studio Shop</h2>
                 <a href="#little-moon-picnic">The Little Moon Picnic</a>
                 <a href="#collections">Sticker Collections</a>
+                <a href="#laptop-stickers">Laptop Stickers</a>
                 <a href="#digital-books">Digital PDF Coloring Books</a>
               </div>
               <div>
@@ -1458,6 +1488,12 @@ export default function App() {
       <StickerPreviewModal
         sticker={activeStickerPreview}
         onClose={() => setActiveStickerPreview(null)}
+        onAddToBag={handleAddToBag}
+      />
+
+      <LaptopStickerPreviewModal
+        pack={activeLaptopStickerPreview}
+        onClose={() => setActiveLaptopStickerPreview(null)}
         onAddToBag={handleAddToBag}
       />
 
