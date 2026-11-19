@@ -13,12 +13,14 @@ import {
   computeGroundedCharacterY,
   filterStickerProducts,
   calculateStudioBagSummary,
+  getVisibleDigitalCombos,
 } from './moonMeshLogic';
 import {
   HERO_SLIDES,
   BOOKS,
   STICKER_COLLECTIONS,
   DIGITAL_PDF_BOOKS,
+  DIGITAL_COMBO_PACKS,
 } from '../data/moonMeshData';
 
 test('getNextSlideIndex wraps around forward and backward', () => {
@@ -209,4 +211,41 @@ test('calculateStudioBagSummary computes item count, subtotal, and free shipping
   assert.equal(full.qualifiesForFreeShipping, true);
   assert.equal(full.amountToFreeShipping, 0);
 });
+
+test('DIGITAL_COMBO_PACKS starts with Combo 1-4 Little Cuddles at $2.99 and expands with View more', () => {
+  assert.ok(DIGITAL_COMBO_PACKS.length >= 4);
+  const initialFour = getVisibleDigitalCombos(DIGITAL_COMBO_PACKS, false, 4);
+  assert.equal(initialFour.length, 4);
+  assert.deepEqual(
+    initialFour.map((c) => c.title),
+    [
+      'Combo 1: Little Cuddles',
+      'Combo 2: Little Cuddles',
+      'Combo 3: Little Cuddles',
+      'Combo 4: Little Cuddles',
+    ]
+  );
+  assert.ok(initialFour.every((c) => c.price === 2.99 && c.pageCount === 10));
+
+  const expanded = getVisibleDigitalCombos(DIGITAL_COMBO_PACKS, true, 4);
+  assert.equal(expanded.length, DIGITAL_COMBO_PACKS.length);
+});
+
+test('calculateStudioBagSummary includes Digital Combo packs accurately', () => {
+  const priceMap: Record<string, number> = {};
+  for (const c of DIGITAL_COMBO_PACKS) priceMap[c.id] = c.price;
+
+  const summary = calculateStudioBagSummary(
+    {
+      'digital-combo-1-little-cuddles': 2,
+      'digital-combo-3-little-cuddles': 1,
+    },
+    priceMap,
+    25
+  );
+  assert.equal(summary.totalItems, 3);
+  assert.equal(summary.subtotal, 8.97);
+  assert.equal(summary.qualifiesForFreeShipping, false);
+});
+
 
