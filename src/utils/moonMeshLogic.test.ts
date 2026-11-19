@@ -16,6 +16,7 @@ import {
   getVisibleDigitalCombos,
   filterLaptopStickers,
   filterKidsBeddingProducts,
+  parseWishlistIds,
 } from './moonMeshLogic';
 import {
   HERO_SLIDES,
@@ -321,4 +322,41 @@ test('calculateStudioBagSummary includes Kids Bedding items accurately', () => {
   assert.equal(summary.qualifiesForFreeShipping, true);
   assert.equal(summary.amountToFreeShipping, 0);
 });
+
+test('parseWishlistIds hydrates valid product IDs across Books, Stickers, Bedding, and filters invalid entries', () => {
+  const validIds = new Set<string>([
+    ...BOOKS.map((b) => b.id),
+    ...STICKER_COLLECTIONS.map((s) => s.id),
+    ...LAPTOP_STICKER_PACKS.map((l) => l.id),
+    ...KIDS_BEDDING_COLLECTION.map((k) => k.id),
+    ...DIGITAL_PDF_BOOKS.map((d) => d.id),
+    ...DIGITAL_COMBO_PACKS.map((c) => c.id),
+  ]);
+
+  const parsed = parseWishlistIds(
+    JSON.stringify([
+      'little-moon-picnic',
+      'sticker-miso-crew-pack',
+      'bedding-moon-picnic-sheets',
+      'non-existent-item',
+      42,
+    ]),
+    validIds
+  );
+  assert.deepEqual([...parsed], [
+    'little-moon-picnic',
+    'sticker-miso-crew-pack',
+    'bedding-moon-picnic-sheets',
+  ]);
+
+  const migrated = parseWishlistIds(
+    null,
+    validIds,
+    JSON.stringify(['digital-combo-1-little-cuddles'])
+  );
+  assert.deepEqual([...migrated], ['digital-combo-1-little-cuddles']);
+
+  assert.equal(parseWishlistIds('not-valid-json{', validIds).size, 0);
+});
+
 

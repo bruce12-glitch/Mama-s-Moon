@@ -53,6 +53,28 @@ export function toggleSavedBookId(savedIds: Set<string>, bookId: string, validBo
 }
 
 /**
+ * Parses and validates persisted wishlist product IDs from localStorage JSON,
+ * optionally migrating legacy saved-digital IDs on first load.
+ */
+export function parseWishlistIds(
+  rawJson: string | null,
+  validIds: Set<string>,
+  legacyRawJson: string | null = null
+): Set<string> {
+  const source = rawJson ?? legacyRawJson;
+  if (!source) return new Set<string>();
+  try {
+    const parsed = JSON.parse(source);
+    if (!Array.isArray(parsed)) return new Set<string>();
+    return new Set(
+      parsed.filter((id): id is string => typeof id === 'string' && validIds.has(id))
+    );
+  } catch {
+    return new Set<string>();
+  }
+}
+
+/**
  * Validates Moon Mail email input and returns a friendly validation result.
  */
 export function validateMoonMailEmail(rawEmail: string): { valid: boolean; error: string } {
