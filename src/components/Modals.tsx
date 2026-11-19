@@ -4,11 +4,14 @@ import {
   CATALOG_SECTIONS,
   STICKER_COLLECTIONS,
   LAPTOP_STICKER_PACKS,
+  KIDS_BEDDING_COLLECTION,
   DIGITAL_PDF_BOOKS,
   DIGITAL_COMBO_PACKS,
   BookItem,
   StickerProduct,
   LaptopStickerProduct,
+  KidsBeddingProduct,
+  KidsBeddingSize,
   DigitalPdfProduct,
   DigitalComboProduct,
 } from '../data/moonMeshData';
@@ -85,6 +88,15 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
             keywords: `${l.subtitle} ${l.description} ${l.materialSpec} ${l.fitDevices} ${l.keywords}`,
             image: l.image,
             href: `#${l.id}` as string | undefined,
+            book: undefined as BookItem | undefined,
+          })),
+          ...KIDS_BEDDING_COLLECTION.map((b) => ({
+            id: b.id as string | undefined,
+            title: b.title,
+            theme: `Kids Bedding · ${b.categoryLabel} · $${b.price.toFixed(2)}`,
+            keywords: `${b.subtitle} ${b.description} ${b.fabricSpec} ${b.threadCount} ${b.keywords}`,
+            image: b.image,
+            href: `#${b.id}` as string | undefined,
             book: undefined as BookItem | undefined,
           })),
           ...DIGITAL_PDF_BOOKS.map((d) => ({
@@ -535,6 +547,134 @@ export const LaptopStickerPreviewModal: React.FC<LaptopStickerPreviewModalProps>
   );
 };
 
+interface KidsBeddingPreviewModalProps {
+  item: KidsBeddingProduct | null;
+  selectedSize: KidsBeddingSize;
+  onSelectSize: (productId: string, size: KidsBeddingSize) => void;
+  onClose: () => void;
+  onAddToBag: (productId: string) => void;
+}
+
+export const KidsBeddingPreviewModal: React.FC<KidsBeddingPreviewModalProps> = ({
+  item,
+  selectedSize,
+  onSelectSize,
+  onClose,
+  onAddToBag,
+}) => {
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (item && !dialog.open) {
+      dialog.showModal();
+    } else if (!item && dialog.open) {
+      dialog.close();
+    }
+  }, [item]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      id="kids-bedding-dialog"
+      className="dialog book-dialog"
+      aria-labelledby="bedding-modal-title"
+      onClose={onClose}
+    >
+      <div className="dialog-close">
+        <button type="button" aria-label="Close kids bedding preview" onClick={onClose}>
+          <svg className="icon" aria-hidden="true">
+            <use href="#close" />
+          </svg>
+        </button>
+      </div>
+      {item && (
+        <>
+          <div className="preview-art flex-col gap-3" style={{ background: item.bgTint }}>
+            <div className="kids-bedding-modal-frame">
+              <img
+                src={item.image}
+                alt={item.title}
+                referrerPolicy="no-referrer"
+                className="kids-bedding-modal-img"
+              />
+            </div>
+          </div>
+          <div className="preview-copy">
+            <p className="eyebrow">
+              <svg className="icon" aria-hidden="true">
+                <use href="#spark" />
+              </svg>{' '}
+              {item.categoryLabel} &middot; {item.pieceCount}
+            </p>
+            <h2 id="bedding-modal-title">{item.title}</h2>
+            <p className="mt-2 text-lg font-bold text-[#2C2028] tabular-nums">
+              ${item.price.toFixed(2)}
+              {item.compareAtPrice && (
+                <span className="ml-2 text-sm font-normal text-[#847886] line-through">
+                  ${item.compareAtPrice.toFixed(2)}
+                </span>
+              )}
+            </p>
+            <p>{item.description}</p>
+            <p className="mt-3 text-xs font-semibold text-[#6F6472]">
+              {item.fabricSpec} &middot; {item.threadCount} &middot; {item.careSpec}
+            </p>
+
+            <div className="mt-4">
+              <p className="mb-1.5 text-xs font-bold text-[#4F4452]">Bed Size</p>
+              <div
+                className="kids-bedding-size-row"
+                role="group"
+                aria-label={`Choose bed size for ${item.title}`}
+              >
+                {item.availableSizes.map((size) => {
+                  const isActive = selectedSize === size;
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      aria-pressed={isActive}
+                      className={`kids-bedding-size-btn whitespace-nowrap shrink-0 ${
+                        isActive ? 'is-selected' : ''
+                      }`}
+                      onClick={() => onSelectSize(item.id, size)}
+                    >
+                      {size}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="dialog-actions">
+              <button
+                type="button"
+                className="button button-ink whitespace-nowrap"
+                onClick={() => {
+                  onAddToBag(item.id);
+                  onClose();
+                }}
+              >
+                Add ({selectedSize}) to Bag &middot; ${item.price.toFixed(2)}
+              </button>
+              <a
+                className="text-link whitespace-nowrap"
+                href={item.etsyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Order on Etsy <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </>
+      )}
+    </dialog>
+  );
+};
+
 interface DigitalPdfPreviewModalProps {
   pdfBook: DigitalPdfProduct | null;
   onClose: () => void;
@@ -764,6 +904,7 @@ export const DigitalComboPreviewModal: React.FC<DigitalComboPreviewModalProps> =
 interface StudioBagModalProps {
   isOpen: boolean;
   quantities: Record<string, number>;
+  selectedBeddingSizes?: Record<string, KidsBeddingSize>;
   summary: StudioBagSummary;
   onClose: () => void;
   onUpdateQty: (productId: string, delta: number) => void;
@@ -773,6 +914,7 @@ interface StudioBagModalProps {
 export const StudioBagModal: React.FC<StudioBagModalProps> = ({
   isOpen,
   quantities,
+  selectedBeddingSizes = {},
   summary,
   onClose,
   onUpdateQty,
@@ -808,6 +950,16 @@ export const StudioBagModal: React.FC<StudioBagModalProps> = ({
       price: l.price,
       qty: quantities[l.id] || 0,
       image: l.image,
+      isDigital: false,
+      downloadUrl: undefined as string | undefined,
+    })),
+    ...KIDS_BEDDING_COLLECTION.filter((b) => (quantities[b.id] || 0) > 0).map((b) => ({
+      id: b.id,
+      title: b.title,
+      meta: `Kids Bedding · ${selectedBeddingSizes[b.id] || b.defaultSize} · ${b.pieceCount}`,
+      price: b.price,
+      qty: quantities[b.id] || 0,
+      image: b.image,
       isDigital: false,
       downloadUrl: undefined as string | undefined,
     })),
