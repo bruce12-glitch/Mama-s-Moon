@@ -10,9 +10,11 @@ import {
   FAQ_ITEMS,
   STICKER_COLLECTIONS,
   DIGITAL_PDF_BOOKS,
+  DIGITAL_COMBO_PACKS,
   BookItem,
   StickerProduct,
   DigitalPdfProduct,
+  DigitalComboProduct,
   StickerCategory,
 } from './data/moonMeshData';
 import {
@@ -21,22 +23,27 @@ import {
   getForestAudioUiState,
   filterStickerProducts,
   calculateStudioBagSummary,
+  getVisibleDigitalCombos,
+  toggleSavedBookId,
 } from './utils/moonMeshLogic';
 import { forestAudio } from './utils/forestAudio';
 import { HeroCarousel } from './components/HeroCarousel';
+import { DigitalSection } from './components/DigitalSection';
 import { ColoringStudioModal } from './components/ColoringStudioModal';
 import {
   CatalogModal,
   BookPreviewModal,
   StickerPreviewModal,
   DigitalPdfPreviewModal,
+  DigitalComboPreviewModal,
   StudioBagModal,
 } from './components/Modals';
 import { BrandName } from './components/BrandName';
 
 const GIFT_TAB_DISMISSED_KEY = 'mamas-moon-free-page-shortcut-dismissed';
 const STUDIO_BAG_STORAGE_KEY = 'mamas-moon-studio-bag-v1';
-const EMPTY_SAVED_IDS = new Set<string>();
+const SAVED_DIGITAL_STORAGE_KEY = 'mamas-moon-saved-digital-v1';
+const VALID_DIGITAL_COMBO_IDS = new Set(DIGITAL_COMBO_PACKS.map((c) => c.id));
 
 const STICKER_FILTER_TABS: { id: StickerCategory; label: string }[] = [
   { id: 'all', label: 'All Stickers (4)' },
@@ -83,7 +90,40 @@ export default function App() {
   const [activeBookPreview, setActiveBookPreview] = useState<BookItem | null>(null);
   const [activeStickerPreview, setActiveStickerPreview] = useState<StickerProduct | null>(null);
   const [activePdfPreview, setActivePdfPreview] = useState<DigitalPdfProduct | null>(null);
+  const [activeComboPreview, setActiveComboPreview] = useState<DigitalComboProduct | null>(null);
   const [isBagOpen, setIsBagOpen] = useState<boolean>(false);
+
+  // Digital showcase expansion & saved hearts state
+  const [isDigitalExpanded, setIsDigitalExpanded] = useState<boolean>(false);
+  const [savedDigitalIds, setSavedDigitalIds] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem(SAVED_DIGITAL_STORAGE_KEY);
+      if (!raw) return new Set<string>();
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed)
+        ? new Set(parsed.filter((id): id is string => typeof id === 'string' && VALID_DIGITAL_COMBO_IDS.has(id)))
+        : new Set<string>();
+    } catch {
+      return new Set<string>();
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SAVED_DIGITAL_STORAGE_KEY, JSON.stringify([...savedDigitalIds]));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [savedDigitalIds]);
+
+  const handleToggleSaveDigital = (comboId: string) => {
+    setSavedDigitalIds((prev) => toggleSavedBookId(prev, comboId, VALID_DIGITAL_COMBO_IDS));
+  };
+
+  const visibleDigitalCombos = useMemo(
+    () => getVisibleDigitalCombos(DIGITAL_COMBO_PACKS, isDigitalExpanded, 4),
+    [isDigitalExpanded]
+  );
 
   // Sticker collection category filter & Studio Bag state
   const [stickerCategory, setStickerCategory] = useState<StickerCategory>('all');
@@ -109,6 +149,7 @@ export default function App() {
     const map: Record<string, number> = {};
     for (const s of STICKER_COLLECTIONS) map[s.id] = s.price;
     for (const d of DIGITAL_PDF_BOOKS) map[d.id] = d.price;
+    for (const c of DIGITAL_COMBO_PACKS) map[c.id] = c.price;
     return map;
   }, []);
 
@@ -502,6 +543,7 @@ export default function App() {
 
         <nav id="main-nav" className="main-nav shell" aria-label="Main">
           <a href="#books">Our books</a>
+          <a href="#digital">Digital</a>
           <a href="#collections">Stickers</a>
           <a href="#digital-books">Digital PDFs</a>
           <a href="#story">Our little world</a>
@@ -715,6 +757,17 @@ export default function App() {
             </p>
           </div>
         </section>
+
+        {/* Digital Combos Showcase Section */}
+        <DigitalSection
+          combos={visibleDigitalCombos}
+          totalComboCount={DIGITAL_COMBO_PACKS.length}
+          isExpanded={isDigitalExpanded}
+          savedIds={savedDigitalIds}
+          onToggleExpand={() => setIsDigitalExpanded((prev) => !prev)}
+          onToggleSave={handleToggleSaveDigital}
+          onSelectCombo={(combo) => setActiveComboPreview(combo)}
+        />
 
         {/* Sticker Collections Storefront Section */}
         <section
@@ -1391,7 +1444,7 @@ export default function App() {
       <CatalogModal
         isOpen={catalogState.open}
         mode={catalogState.mode}
-        savedIds={EMPTY_SAVED_IDS}
+        savedIds={savedDigitalIds}
         onClose={() => setCatalogState((prev) => ({ ...prev, open: false }))}
         onSelectBook={(book) => setActiveBookPreview(book)}
       />
@@ -1412,6 +1465,14 @@ export default function App() {
         pdfBook={activePdfPreview}
         onClose={() => setActivePdfPreview(null)}
         onAddToBag={handleAddToBag}
+      />
+
+      <DigitalComboPreviewModal
+        combo={activeComboPreview}
+        isSaved={Boolean(activeComboPreview && savedDigitalIds.has(activeComboPreview.id))}
+        onClose={() => setActiveComboPreview(null)}
+        onAddToBag={handleAddToBag}
+        onToggleSave={handleToggleSaveDigital}
       />
 
       <StudioBagModal
