@@ -524,17 +524,17 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(calc(100% - 30px), 1200px);
+  width: min(calc(100% - 30px), 1320px);
   margin-inline: auto;
   flex-wrap: wrap;
-  gap: 6px 32px;
+  gap: 6px 22px;
   min-height: 45px;
   padding-bottom: 12px;
 }
 
 .main-nav a, .main-nav button.nav-3d-btn {
   padding: 6px 0;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
   line-height: 1.3;
   border: 0;
@@ -3814,3 +3814,197 @@ img {
   }
 }
 
+/* ==========================================================================
+   LAPTOP STICKERS SECTION (#laptop-stickers)
+   ========================================================================== */
+.laptop-stickers-section {
+  position: relative;
+  padding: 52px 0 56px;
+  background:
+    radial-gradient(ellipse 72% 48% at 50% 18%, rgba(226, 240, 232, 0.34) 0%, rgba(246, 236, 255, 0.2) 55%, transparent 86%),
+    var(--paper);
+  border-top: 1px solid rgba(58, 35, 20, 0.07);
+}
+
+.laptop-stickers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+.laptop-sticker-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  background: #fffdf9;
+  border: 1.5px solid rgba(58, 35, 20, 0.1);
+  box-shadow: 0 10px 24px rgba(58, 35, 20, 0.05);
+  overflow: hidden;
+  transition: transform 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth);
+}
+
+.laptop-sticker-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(58, 35, 20, 0.1);
+}
+
+.laptop-sticker-stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 16px 16px 14px;
+  border: 0;
+  border-bottom: 1px solid rgba(58, 35, 20, 0.07);
+  cursor: var(--cursor-pointer);
+  overflow: hidden;
+}
+
+.laptop-sticker-photo-wrap {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(45, 28, 20, 0.08);
+}
+
+.laptop-sticker-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s var(--ease-smooth);
+}
+
+.laptop-sticker-card:hover .laptop-sticker-img {
+  transform: scale(1.03);
+}
+
+.laptop-sticker-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 18px 18px;
+}
+
+.laptop-sticker-body .store-meta-line {
+  font-size: 11.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.laptop-sticker-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.laptop-sticker-title-row h3 {
+  font-size: 17px;
+  line-height: 1.28;
+  color: #2c2028;
+}
+
+.laptop-sticker-price {
+  flex-shrink: 0;
+  font-family: "Fredoka", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c2028;
+  white-space: nowrap;
+}
+
+.laptop-sticker-desc {
+  margin-top: 7px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  line-height: 1.48;
+}
+
+.laptop-sticker-spec-line {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #77697a;
+}
+
+.laptop-sticker-actions {
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.laptop-sticker-actions .button {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+/* Laptop Lid Mockup inside Preview Modal */
+.laptop-lid-mockup {
+  width: min(100%, 350px);
+  padding: 14px 14px 18px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #f3f5f8 0%, #d9dfe7 100%);
+  border: 2px solid #bfc6d2;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 34px rgba(34, 24, 38, 0.16);
+}
+
+.laptop-lid-surface {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  padding: 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #eceff3 0%, #dfe3ea 52%, #d5dae3 100%);
+  border: 1px solid rgba(58, 35, 20, 0.08);
+}
+
+.laptop-lid-sticker-art {
+  width: 88%;
+  height: 88%;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 8px 18px rgba(36, 26, 40, 0.18);
+  transform: rotate(-1.5deg);
+}
+
+.laptop-lid-hinge {
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  bottom: 0;
+  height: 7px;
+  border-radius: 4px 4px 0 0;
+  background: #3d3742;
+}
+
+@media (max-width: 1120px) {
+  .laptop-stickers-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .laptop-stickers-section {
+    padding: 40px 0 44px;
+  }
+  .laptop-stickers-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
