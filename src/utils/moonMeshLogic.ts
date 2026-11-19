@@ -276,3 +276,18 @@ export function calculateStudioBagSummary(
   };
 }
 
+/**
+ * Returns the initial 4 Digital combos or the full list when "View more" is expanded.
+ */
+export function getVisibleDigitalCombos<T>(
+  combos: T[],
+  isExpanded: boolean,
+  initialCount = 4
+): T[] {
+  if (isExpanded || initialCount <= 0) {
+    return combos;
+  }
+  return combos.slice(0, initialCount);
+}
+
+

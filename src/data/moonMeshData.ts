@@ -90,6 +90,30 @@ export interface DigitalPdfProduct {
   badge?: string;
 }
 
+export interface DigitalComboProduct {
+  id: string;
+  comboLabel: string;
+  title: string;
+  seriesTitle: string;
+  subtitle: string;
+  price: number;
+  pageCount: number;
+  formatSpec: string;
+  ageRange: string;
+  description: string;
+  coverImage: string;
+  coverBg: string;
+  coverTextColor: string;
+  headlineColorStart: string;
+  headlineColorEnd: string;
+  samplePages: string[];
+  sampleColoredSvg: string;
+  samplePdfUrl: string;
+  etsyUrl: string;
+  keywords: string;
+  hasEmbeddedCoverText?: boolean;
+}
+
 export interface CrewMember {
   name: string;
   role: string;
@@ -466,6 +490,267 @@ export const DIGITAL_PDF_BOOKS: DigitalPdfProduct[] = [
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+printable+coloring+book+bundle+PDF',
     bgTint: '#FDF0F4',
     badge: 'BEST VALUE · 3 PDFS',
+  },
+];
+
+export const DIGITAL_COMBO_PACKS: DigitalComboProduct[] = [
+  {
+    id: 'digital-combo-1-little-cuddles',
+    comboLabel: 'COMBO 1',
+    title: 'Combo 1: Little Cuddles',
+    seriesTitle: 'LITTLE CUDDLES',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 4–9',
+    description:
+      'Hit the sunny countryside road with Combo 1: Little Cuddles! Includes 10 cozy, bold-line digital coloring pages featuring road trips, picnic blankets, bedtime stories, and quiet kitchen-table scenes ready to print or color on a tablet.',
+    coverImage: '/assets/digital-combo-1.jpg',
+    coverBg: '#FFF4B8',
+    coverTextColor: '#3B2314',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    samplePages: [
+      '/assets/rooftop-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/rooftop-colored.svg',
+    samplePdfUrl: '/assets/miso-moon-coloring.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Little+Cuddles+Combo+1+digital',
+    keywords: 'digital combo 1 little cuddles 10 digital coloring pages car road trip printable pdf',
+  },
+  {
+    id: 'digital-combo-2-little-cuddles',
+    comboLabel: 'COMBO 2',
+    title: 'Combo 2: Little Cuddles',
+    seriesTitle: 'LITTLE CUDDLES',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 4–9',
+    description:
+      'Blast off into cozy imagination with Combo 2: Little Cuddles! Includes 10 crisp digital coloring pages packed with toy rockets, starry playrooms, sleepy clouds, and gentle outdoor adventures.',
+    coverImage: '/assets/digital-combo-2.jpg',
+    coverBg: '#D4EFD8',
+    coverTextColor: '#2B3A2E',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    samplePages: [
+      '/assets/rocket-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/garden-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/rocket-colored.svg',
+    samplePdfUrl: '/assets/miso-and-the-moon.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Little+Cuddles+Combo+2+digital',
+    keywords: 'digital combo 2 little cuddles 10 digital coloring pages rocket stars puppy printable pdf',
+  },
+  {
+    id: 'digital-combo-3-little-cuddles',
+    comboLabel: 'COMBO 3',
+    title: 'Combo 3: Little Cuddles',
+    seriesTitle: 'LITTLE CUDDLES',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 4–9',
+    description:
+      'Step into a sunny backyard garden with Combo 3: Little Cuddles! Features 10 easy-to-color digital pages with blooming flowerpots, birdbaths, friendly garden bugs, and cozy afternoon tea spots.',
+    coverImage: '/assets/digital-combo-3.jpg',
+    coverBg: '#D7EEFA',
+    coverTextColor: '#243544',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    samplePages: [
+      '/assets/garden-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rocket-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/garden-colored.svg',
+    samplePdfUrl: '/assets/miso-moon-coloring.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Little+Cuddles+Combo+3+digital',
+    keywords: 'digital combo 3 little cuddles 10 digital coloring pages ladybug garden birdbath printable pdf',
+  },
+  {
+    id: 'digital-combo-4-little-cuddles',
+    comboLabel: 'COMBO 4',
+    title: 'Combo 4: Little Cuddles',
+    seriesTitle: 'LITTLE CUDDLES',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 4–9',
+    description:
+      'Warm croissants and neighborhood smiles await in Combo 4: Little Cuddles! Features 10 bold-outline digital coloring pages of cozy bakeries, wicker bread baskets, market stalls, and sweet afternoon treats.',
+    coverImage: '/assets/digital-combo-4.jpg',
+    coverBg: '#FCE2E8',
+    coverTextColor: '#3E252D',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    samplePages: [
+      '/assets/miso-moon-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/rooftop-colored.svg',
+    samplePdfUrl: '/assets/miso-and-the-moon.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Little+Cuddles+Combo+4+digital',
+    keywords: 'digital combo 4 little cuddles 10 digital coloring pages panda duck bakery bread printable pdf',
+  },
+  {
+    id: 'digital-combo-5-moon-picnic',
+    comboLabel: 'COMBO 5',
+    title: 'Combo 5: Moon Picnic',
+    seriesTitle: 'MOON PICNIC',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 6–9',
+    description:
+      'Ten favorite indoor picnic scenes from Miso & Friends! Color warm custard buns, checkered blankets, paper moons, and rainy-day cocoa mugs.',
+    coverImage: '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3',
+    coverBg: '#FBE39C',
+    coverTextColor: '#3B2314',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    hasEmbeddedCoverText: true,
+    samplePages: [
+      '/assets/rooftop-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rocket-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/rooftop-colored.svg',
+    samplePdfUrl: '/assets/miso-moon-coloring.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Little+Moon+Picnic+Combo+5+digital',
+    keywords: 'digital combo 5 moon picnic 10 digital coloring pages miso plum printable pdf',
+  },
+  {
+    id: 'digital-combo-6-winter-village',
+    comboLabel: 'COMBO 6',
+    title: 'Combo 6: Winter Village',
+    seriesTitle: 'WINTER VILLAGE',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 6–9',
+    description:
+      'Bundle up for 10 snowy Cocoa Lane scenes featuring candy-cane mugs, sparkling wreaths, mittened kittens, and cozy winter cottages.',
+    coverImage: '/assets/christmas-new-year-book.png?v=mamas-moon-3',
+    coverBg: '#FCE7E9',
+    coverTextColor: '#4B2C20',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    hasEmbeddedCoverText: true,
+    samplePages: [
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/garden-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/rooftop-colored.svg',
+    samplePdfUrl: '/assets/miso-and-the-moon.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Winter+Village+Combo+6+digital',
+    keywords: 'digital combo 6 winter village christmas new year 10 digital coloring pages printable pdf',
+  },
+  {
+    id: 'digital-combo-7-midnight-kittens',
+    comboLabel: 'COMBO 7',
+    title: 'Combo 7: Midnight Kittens',
+    seriesTitle: 'MIDNIGHT KITTENS',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 4–9',
+    description:
+      'Ten serene rooftop lantern and crescent-moon coloring sheets designed for slow bedtime wind-downs and bold marker shading.',
+    coverImage: '/assets/cover-midnight-cozy.webp',
+    coverBg: '#ECE3FB',
+    coverTextColor: '#2D213D',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    samplePages: [
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/garden-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/rooftop-colored.svg',
+    samplePdfUrl: '/assets/miso-and-the-moon.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Midnight+Kittens+Combo+7+digital',
+    keywords: 'digital combo 7 midnight kittens rooftop 10 digital coloring pages printable pdf',
+  },
+  {
+    id: 'digital-combo-8-starlight-garden',
+    comboLabel: 'COMBO 8',
+    title: 'Combo 8: Starlight Garden',
+    seriesTitle: 'STARLIGHT GARDEN',
+    subtitle: '10 DIGITAL COLORING PAGES',
+    price: 2.99,
+    pageCount: 10,
+    formatSpec: '300 DPI Printable PDF · US Letter & A4',
+    ageRange: 'Ages 4–9',
+    description:
+      'Ten botanical greenhouse pages with giant daisies, watering cans, and Sprout the snail exploring sunlit garden paths.',
+    coverImage: '/assets/cover-garden-cozy.webp',
+    coverBg: '#E3F5EA',
+    coverTextColor: '#223B2B',
+    headlineColorStart: '#EA84A7',
+    headlineColorEnd: '#8E88DC',
+    samplePages: [
+      '/assets/garden-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+      '/assets/garden-coloring.svg',
+      '/assets/miso-moon-coloring.svg',
+      '/assets/rooftop-coloring.svg',
+      '/assets/rocket-coloring.svg',
+    ],
+    sampleColoredSvg: '/assets/garden-colored.svg',
+    samplePdfUrl: '/assets/miso-moon-coloring.pdf',
+    etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Starlight+Garden+Combo+8+digital',
+    keywords: 'digital combo 8 starlight garden snail sprout 10 digital coloring pages printable pdf',
   },
 ];
 
