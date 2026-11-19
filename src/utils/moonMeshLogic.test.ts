@@ -14,11 +14,13 @@ import {
   filterStickerProducts,
   calculateStudioBagSummary,
   getVisibleDigitalCombos,
+  filterLaptopStickers,
 } from './moonMeshLogic';
 import {
   HERO_SLIDES,
   BOOKS,
   STICKER_COLLECTIONS,
+  LAPTOP_STICKER_PACKS,
   DIGITAL_PDF_BOOKS,
   DIGITAL_COMBO_PACKS,
 } from '../data/moonMeshData';
@@ -248,4 +250,38 @@ test('calculateStudioBagSummary includes Digital Combo packs accurately', () => 
   assert.equal(summary.qualifiesForFreeShipping, false);
 });
 
+test('filterLaptopStickers filters LAPTOP_STICKER_PACKS by finish accurately', () => {
+  assert.equal(LAPTOP_STICKER_PACKS.length, 4);
+  assert.equal(filterLaptopStickers(LAPTOP_STICKER_PACKS, 'all').length, 4);
+
+  const matte = filterLaptopStickers(LAPTOP_STICKER_PACKS, 'matte');
+  assert.equal(matte.length, 2);
+  assert.ok(matte.every((p) => p.finish === 'matte'));
+
+  const holo = filterLaptopStickers(LAPTOP_STICKER_PACKS, 'holographic');
+  assert.equal(holo.length, 1);
+  assert.equal(holo[0].id, 'laptop-sticker-moon-desk');
+
+  const lidSets = filterLaptopStickers(LAPTOP_STICKER_PACKS, 'lid-set');
+  assert.equal(lidSets.length, 1);
+  assert.equal(lidSets[0].id, 'laptop-sticker-full-crew-lid');
+});
+
+test('calculateStudioBagSummary includes Laptop Sticker packs accurately', () => {
+  const priceMap: Record<string, number> = {};
+  for (const p of LAPTOP_STICKER_PACKS) priceMap[p.id] = p.price;
+
+  const summary = calculateStudioBagSummary(
+    {
+      'laptop-sticker-cozy-miso': 2, // 17.00
+      'laptop-sticker-moon-desk': 1, // 9.50
+    },
+    priceMap,
+    25
+  );
+  assert.equal(summary.totalItems, 3);
+  assert.equal(summary.subtotal, 26.5);
+  assert.equal(summary.qualifiesForFreeShipping, true);
+  assert.equal(summary.amountToFreeShipping, 0);
+});
 
