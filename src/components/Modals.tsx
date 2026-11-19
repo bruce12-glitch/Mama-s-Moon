@@ -1114,3 +1114,287 @@ export const StudioBagModal: React.FC<StudioBagModalProps> = ({
   );
 };
 
+interface WishlistModalProps {
+  isOpen: boolean;
+  wishlistIds: Set<string>;
+  selectedBeddingSizes: Record<string, KidsBeddingSize>;
+  bagQuantities: Record<string, number>;
+  onClose: () => void;
+  onToggleWishlist: (id: string) => void;
+  onClearWishlist: () => void;
+  onAddToBag: (id: string) => void;
+  onPreviewBook: (book: BookItem) => void;
+  onPreviewSticker: (sticker: StickerProduct) => void;
+  onPreviewLaptopSticker: (pack: LaptopStickerProduct) => void;
+  onPreviewBedding: (item: KidsBeddingProduct) => void;
+  onPreviewPdf: (pdfBook: DigitalPdfProduct) => void;
+  onPreviewCombo: (combo: DigitalComboProduct) => void;
+}
+
+export const WishlistModal: React.FC<WishlistModalProps> = ({
+  isOpen,
+  wishlistIds,
+  selectedBeddingSizes,
+  bagQuantities,
+  onClose,
+  onToggleWishlist,
+  onClearWishlist,
+  onAddToBag,
+  onPreviewBook,
+  onPreviewSticker,
+  onPreviewLaptopSticker,
+  onPreviewBedding,
+  onPreviewPdf,
+  onPreviewCombo,
+}) => {
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isOpen && !dialog.open) {
+      dialog.showModal();
+    } else if (!isOpen && dialog.open) {
+      dialog.close();
+    }
+  }, [isOpen]);
+
+  type WishlistEntry = {
+    id: string;
+    title: string;
+    category: string;
+    meta: string;
+    priceLabel: string;
+    image: string;
+    canAddToBag: boolean;
+    onPreview: () => void;
+  };
+
+  const entryMap = new Map<string, WishlistEntry>();
+
+  for (const b of BOOKS) {
+    entryMap.set(b.id, {
+      id: b.id,
+      title: b.title,
+      category: 'Storybooks',
+      meta: `${b.genre} · ${b.stageTagline}`,
+      priceLabel: 'Hardcover & Paperback',
+      image: b.coverImage,
+      canAddToBag: false,
+      onPreview: () => {
+        onClose();
+        onPreviewBook(b);
+      },
+    });
+  }
+
+  for (const s of STICKER_COLLECTIONS) {
+    entryMap.set(s.id, {
+      id: s.id,
+      title: s.title,
+      category: 'Stickers',
+      meta: `${s.categoryLabel} · ${s.pieceCount}`,
+      priceLabel: `$${s.price.toFixed(2)}`,
+      image: s.primaryImage,
+      canAddToBag: true,
+      onPreview: () => {
+        onClose();
+        onPreviewSticker(s);
+      },
+    });
+  }
+
+  for (const l of LAPTOP_STICKER_PACKS) {
+    entryMap.set(l.id, {
+      id: l.id,
+      title: l.title,
+      category: 'Laptop Stickers',
+      meta: `${l.finishLabel} · ${l.decalCount} decals`,
+      priceLabel: `$${l.price.toFixed(2)}`,
+      image: l.image,
+      canAddToBag: true,
+      onPreview: () => {
+        onClose();
+        onPreviewLaptopSticker(l);
+      },
+    });
+  }
+
+  for (const bed of KIDS_BEDDING_COLLECTION) {
+    const chosenSize = selectedBeddingSizes[bed.id] || bed.defaultSize;
+    entryMap.set(bed.id, {
+      id: bed.id,
+      title: bed.title,
+      category: 'Kids Bedding',
+      meta: `${chosenSize} · ${bed.pieceCount}`,
+      priceLabel: `$${bed.price.toFixed(2)}`,
+      image: bed.image,
+      canAddToBag: true,
+      onPreview: () => {
+        onClose();
+        onPreviewBedding(bed);
+      },
+    });
+  }
+
+  for (const d of DIGITAL_PDF_BOOKS) {
+    entryMap.set(d.id, {
+      id: d.id,
+      title: d.title,
+      category: 'Digital PDF',
+      meta: `${d.pageCount} pages · ${d.formatSpec}`,
+      priceLabel: `$${d.price.toFixed(2)}`,
+      image: d.coverImage,
+      canAddToBag: true,
+      onPreview: () => {
+        onClose();
+        onPreviewPdf(d);
+      },
+    });
+  }
+
+  for (const c of DIGITAL_COMBO_PACKS) {
+    entryMap.set(c.id, {
+      id: c.id,
+      title: c.title,
+      category: 'Digital Combo',
+      meta: `${c.pageCount} Digital Coloring Pages`,
+      priceLabel: `$${c.price.toFixed(2)}`,
+      image: c.coverImage,
+      canAddToBag: true,
+      onPreview: () => {
+        onClose();
+        onPreviewCombo(c);
+      },
+    });
+  }
+
+  const savedEntries = Array.from(wishlistIds)
+    .map((id) => entryMap.get(id))
+    .filter((entry): entry is WishlistEntry => Boolean(entry));
+
+  return (
+    <dialog
+      ref={dialogRef}
+      id="wishlist-dialog"
+      className="dialog catalog-dialog"
+      aria-labelledby="wishlist-dialog-title"
+      onClose={onClose}
+    >
+      <div className="dialog-close">
+        <button type="button" aria-label="Close wishlist" onClick={onClose}>
+          <svg className="icon" aria-hidden="true">
+            <use href="#close" />
+          </svg>
+        </button>
+      </div>
+      <p className="eyebrow">
+        <svg className="icon" aria-hidden="true">
+          <use href="#heart" />
+        </svg>{' '}
+        <BrandName /> Wishlist
+      </p>
+      <h2 id="wishlist-dialog-title">Saved Wishlist ({savedEntries.length})</h2>
+      <p className="mt-1 text-sm text-[#5D5361]">
+        Your favorite storybooks, cozy stickers, and kids room bedding saved automatically on this
+        device.
+      </p>
+
+      {savedEntries.length === 0 ? (
+        <div className="py-8 text-center">
+          <p className="text-base text-[#5D5361]">
+            Your wishlist is empty. Tap the heart icon on any storybook, sticker pack, or kids
+            bedsheet set to save it here!
+          </p>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <a className="button button-ink whitespace-nowrap" href="#books" onClick={onClose}>
+              Browse Books
+            </a>
+            <a
+              className="button button-outline whitespace-nowrap"
+              href="#collections"
+              onClick={onClose}
+            >
+              Browse Stickers
+            </a>
+            <a
+              className="button button-outline whitespace-nowrap"
+              href="#kids-bedding"
+              onClick={onClose}
+            >
+              Browse Kids Bedding
+            </a>
+          </div>
+        </div>
+      ) : (
+        <>
+          <ul className="bag-item-list">
+            {savedEntries.map((entry) => {
+              const inBag = bagQuantities[entry.id] || 0;
+              return (
+                <li key={entry.id} className="bag-item-row wishlist-item-row">
+                  <button
+                    type="button"
+                    className="wishlist-thumb-btn"
+                    onClick={entry.onPreview}
+                    aria-label={`Inspect ${entry.title}`}
+                  >
+                    <img src={entry.image} alt="" className="bag-item-thumb" />
+                  </button>
+                  <div className="bag-item-info">
+                    <span className="wishlist-category-tag">{entry.category}</span>
+                    <strong>{entry.title}</strong>
+                    <small>{entry.meta}</small>
+                    <span className="bag-item-price tabular-nums">{entry.priceLabel}</span>
+                  </div>
+                  <div className="wishlist-row-actions">
+                    {entry.canAddToBag ? (
+                      <button
+                        type="button"
+                        className="button button-ink wishlist-action-btn whitespace-nowrap"
+                        onClick={() => onAddToBag(entry.id)}
+                      >
+                        {inBag > 0 ? `In Bag (${inBag})` : 'Add to Bag'}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="button button-ink wishlist-action-btn whitespace-nowrap"
+                        onClick={entry.onPreview}
+                      >
+                        Peek Inside
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      className="wishlist-remove-btn whitespace-nowrap"
+                      aria-label={`Remove ${entry.title} from wishlist`}
+                      onClick={() => onToggleWishlist(entry.id)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="bag-summary-footer flex flex-wrap items-center justify-between gap-3">
+            <span className="text-xs text-[#706575]">
+              Saved to local browser storage under &ldquo;wishlist&rdquo;.
+            </span>
+            <button
+              type="button"
+              className="text-link text-xs whitespace-nowrap"
+              onClick={onClearWishlist}
+            >
+              Clear wishlist
+            </button>
+          </div>
+        </>
+      )}
+    </dialog>
+  );
+};
+
+
