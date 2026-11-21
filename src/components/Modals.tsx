@@ -375,9 +375,6 @@ export const StickerPreviewModal: React.FC<StickerPreviewModalProps> = ({
                 alt={sticker.title}
                 className="sticker-modal-img"
               />
-              <span className="sticker-modal-charm" aria-hidden="true">
-                <img src={sticker.accentImage} alt="" />
-              </span>
             </div>
           </div>
           <div className="preview-copy">

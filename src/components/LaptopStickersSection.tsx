@@ -2,6 +2,7 @@ import React from 'react';
 import { LaptopStickerFinish, LaptopStickerProduct } from '../data/moonMeshData';
 import { BrandName } from './BrandName';
 import { WishlistHeartButton } from './WishlistHeartButton';
+import { isNewArrival } from '../utils/moonMeshLogic';
 
 const LAPTOP_FINISH_TABS: { id: LaptopStickerFinish; label: string }[] = [
   { id: 'all', label: 'All Decals (4)' },
@@ -89,6 +90,7 @@ export const LaptopStickersSection: React.FC<LaptopStickersSectionProps> = ({
           {packs.map((pack) => {
             const isAdded = recentlyAddedId === pack.id;
             const inBagCount = bagQuantities[pack.id] || 0;
+            const isNew = isNewArrival(pack.addedAt);
 
             return (
               <article key={pack.id} className="laptop-sticker-card" id={pack.id}>
@@ -100,7 +102,12 @@ export const LaptopStickersSection: React.FC<LaptopStickersSectionProps> = ({
                     aria-label={`Preview ${pack.title} on laptop lid`}
                     onClick={() => onPreviewPack(pack)}
                   >
-                    {pack.badge && <span className="store-corner-tag">{pack.badge}</span>}
+                    {(isNew || pack.badge) && (
+                      <div className="store-corner-tag-row">
+                        {isNew && <span className="store-new-tag">New</span>}
+                        {pack.badge && <span className="store-corner-tag">{pack.badge}</span>}
+                      </div>
+                    )}
                     <div className="laptop-sticker-photo-wrap">
                       <img
                         src={pack.image}

@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BOOKS, HERO_SLIDES, BookItem, HeroSlide } from '../data/moonMeshData';
-import { getNextSlideIndex } from '../utils/moonMeshLogic';
+import {
+  getNextSlideIndex,
+  getHeroTrimPalette,
+  getHeroSlideTransitionState,
+} from '../utils/moonMeshLogic';
 import { BrandName } from './BrandName';
+import { HeroScallopTrim } from './HeroScallopTrim';
 
 interface HeroCarouselProps {
   onOpenStudio: () => void;
@@ -24,6 +29,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
   onPreviewBook,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [previousIndex, setPreviousIndex] = useState<number | null>(null);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
@@ -31,19 +37,47 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
 
   const totalSlides = HERO_SLIDES.length;
   const activeSlide = HERO_SLIDES[activeIndex];
+  const activeTrimPalette = getHeroTrimPalette(activeSlide.id);
   const activeShowcaseBook = BOOKS[0];
 
+  const transitionToIndex = useCallback((nextIndex: number) => {
+    setActiveIndex((prev) => {
+      if (prev === nextIndex) return prev;
+      setPreviousIndex(prev);
+      return nextIndex;
+    });
+  }, []);
+
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) => getNextSlideIndex(prev, totalSlides, 1));
+    setActiveIndex((prev) => {
+      const next = getNextSlideIndex(prev, totalSlides, 1);
+      setPreviousIndex(prev);
+      return next;
+    });
   }, [totalSlides]);
 
   const handlePrev = useCallback(() => {
-    setActiveIndex((prev) => getNextSlideIndex(prev, totalSlides, -1));
+    setActiveIndex((prev) => {
+      const next = getNextSlideIndex(prev, totalSlides, -1);
+      setPreviousIndex(prev);
+      return next;
+    });
   }, [totalSlides]);
 
-  const handleGoTo = useCallback((index: number) => {
-    setActiveIndex(index);
-  }, []);
+  const handleGoTo = useCallback(
+    (index: number) => {
+      transitionToIndex(index);
+    },
+    [transitionToIndex]
+  );
+
+  useEffect(() => {
+    if (previousIndex === null) return;
+    const clearTimer = window.setTimeout(() => {
+      setPreviousIndex(null);
+    }, 820);
+    return () => window.clearTimeout(clearTimer);
+  }, [activeIndex, previousIndex]);
 
   useEffect(() => {
     if (!isAutoPlaying) return;
@@ -51,7 +85,11 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     if (reduceMotion) return;
 
     const timer = window.setInterval(() => {
-      setActiveIndex((prev) => getNextSlideIndex(prev, totalSlides, 1));
+      setActiveIndex((prev) => {
+        const next = getNextSlideIndex(prev, totalSlides, 1);
+        setPreviousIndex(prev);
+        return next;
+      });
     }, 7000);
     return () => window.clearInterval(timer);
   }, [isAutoPlaying, totalSlides]);
@@ -129,57 +167,10 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Animated Storybook Background Effects Layer per Slide */}
+      {/* Soft Storybook Background Aura Layer */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        {/* Soft glowing pastel aura spheres */}
         <div className="hero-ambient-aura aura-left" />
         <div className="hero-ambient-aura aura-right" />
-
-        {/* Hand-drawn drifting storybook clouds & twinkling stars */}
-        <svg
-          className="hero-bg-clouds-svg"
-          viewBox="0 0 1440 620"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <linearGradient id="heroCloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.82" />
-              <stop offset="100%" stopColor="#FFF3D6" stopOpacity="0.45" />
-            </linearGradient>
-            <radialGradient id="heroSunGlow" cx="72%" cy="38%" r="48%">
-              <stop offset="0%" stopColor="#FFE89E" stopOpacity="0.55" />
-              <stop offset="55%" stopColor="#FFD6E0" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-          <rect width="1440" height="620" fill="url(#heroSunGlow)" />
-          {/* Soft hand-drawn clouds in outer sky margins */}
-          <g className="hero-cloud-drift-slow" fill="url(#heroCloudGrad)" stroke="#3A2824" strokeOpacity="0.12" strokeWidth="2.5">
-            <path d="M28 135 C28 112, 56 98, 80 108 C94 84, 134 84, 150 108 C174 102, 196 118, 192 140 C190 152, 174 158, 152 158 L50 158 C34 158, 28 148, 28 135 Z" />
-            <path d="M1245 120 C1245 98, 1273 84, 1297 94 C1313 70, 1353 70, 1369 94 C1393 88, 1415 104, 1411 126 C1409 138, 1393 144, 1371 144 L1267 144 C1251 144, 1245 134, 1245 120 Z" />
-          </g>
-          <g className="hero-cloud-drift-fast" fill="url(#heroCloudGrad)" stroke="#3A2824" strokeOpacity="0.1" strokeWidth="2">
-            <path d="M35 495 C35 478, 57 467, 75 475 C87 457, 117 457, 129 475 C147 471, 163 483, 160 499 C158 508, 146 513, 130 513 L51 513 C39 513, 35 505, 35 495 Z" />
-            <path d="M1265 485 C1265 468, 1287 457, 1305 465 C1317 447, 1347 447, 1359 465 C1377 461, 1393 473, 1390 489 C1388 498, 1376 503, 1360 503 L1281 503 C1269 503, 1265 495, 1265 485 Z" />
-          </g>
-          {/* Hand-drawn twinkling stars placed strictly in far outer sky corners away from all text and character ears */}
-          {activeSlide.layout !== 'centered' && (
-            <g fill="#F6C84C" stroke="#2B1B19" strokeWidth="2" strokeLinejoin="round">
-              <path
-                className="hero-svg-star star-a"
-                d="M58 54 L63 66 L76 68 L66 77 L69 90 L58 83 L47 90 L50 77 L40 68 L53 66 Z"
-              />
-              <path
-                className="hero-svg-star star-b"
-                d="M1384 62 L1388 71 L1398 73 L1391 80 L1393 90 L1384 85 L1375 90 L1377 80 L1370 73 L1380 71 Z"
-              />
-              <path
-                className="hero-svg-star star-c"
-                d="M52 388 L56 397 L66 399 L59 406 L61 416 L52 411 L43 416 L45 406 L38 399 L48 397 Z"
-              />
-            </g>
-          )}
-        </svg>
 
         {activeSlide.id === 'coloring-treat' &&
           CONFETTI_PIECES.map((piece) => (
@@ -208,21 +199,33 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         )}
       </div>
 
+      {/* Top Woven-Linen Scalloped Trim (Mama's Moon Palette) */}
+      <HeroScallopTrim position="top" palette={activeTrimPalette} />
+
       {/* Slides Viewport */}
       <div className="hero-slides-stage relative mx-auto w-full max-w-[1600px]">
         {HERO_SLIDES.map((slide, index) => {
-          const isCurrent = index === activeIndex;
+          const transitionState = getHeroSlideTransitionState(index, activeIndex, previousIndex);
+          const isCurrent = transitionState === 'active';
           const imgSrc = getFallbackImage(slide);
           const slideBook = getSlideBook(slide);
 
           return (
             <div
               key={slide.id}
+              data-slide-id={slide.id}
+              data-transition-state={transitionState}
               role="group"
               aria-roledescription="slide"
               aria-label={`${index + 1} of ${totalSlides}: ${slide.titleLines.join(' ')}`}
               aria-hidden={!isCurrent}
-              className={`hero-slide-panel ${isCurrent ? 'is-active' : 'is-inactive'} ${
+              className={`hero-slide-panel ${
+                transitionState === 'active'
+                  ? 'is-active'
+                  : transitionState === 'exiting'
+                  ? 'is-exiting'
+                  : 'is-inactive'
+              } ${
                 slide.layout === 'book-showcase'
                   ? 'layout-book-showcase'
                   : slide.layout === 'centered'
@@ -230,8 +233,120 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                   : 'layout-split'
               }`}
             >
-              {slide.layout === 'book-showcase' ? (
-                /* Full-Bleed Book Showcase Stage */
+              {slide.layout === 'book-showcase' && slide.id === 'winter-village-showcase' ? (
+                /* Crisp Editorial Feature Split for 16:9 Winter Village Scene (zero blur, zero cropping) */
+                <div className="hero-editorial-showcase shell">
+                  <div className="hero-editorial-frame">
+                    <img
+                      src={imgSrc}
+                      fetchPriority={index === 0 ? 'high' : 'auto'}
+                      alt={slide.imageAlt || `${slideBook.title} — Mama's Moon Book Showcase`}
+                      className="hero-editorial-img"
+                      onClick={() => onPreviewBook(slideBook)}
+                    />
+                  </div>
+                  <div className="hero-editorial-copy">
+                    <p className="eyebrow">
+                      <BrandName />
+                      {' · Winter Village Edition'}
+                    </p>
+                    <h1 id={isCurrent ? 'hero-title' : undefined} className="hero-editorial-heading">
+                      Follow Miso &amp; Friends Around Winter Village
+                    </h1>
+                    <p className="hero-editorial-subtitle">{slide.subtitle}</p>
+                    <div className="hero-editorial-actions">
+                      <a
+                        className="button button-ink whitespace-nowrap shrink-0"
+                        href={slide.primaryCta.href}
+                        onClick={(e) => handleCtaClick(e, slide.primaryCta, slideBook)}
+                        tabIndex={isCurrent ? 0 : -1}
+                      >
+                        {slide.primaryCta.label}
+                        <svg className="icon" aria-hidden="true">
+                          <use href="#arrow" />
+                        </svg>
+                      </a>
+                      <a
+                        className="button button-paper whitespace-nowrap shrink-0"
+                        href={slide.secondaryCta.href}
+                        onClick={(e) => handleCtaClick(e, slide.secondaryCta, slideBook)}
+                        tabIndex={isCurrent ? 0 : -1}
+                      >
+                        {slide.secondaryCta.label}
+                      </a>
+                    </div>
+                    {slide.signoff && (
+                      <p className="hero-signoff">
+                        {slide.signoff.replace('♡', '')}{' '}
+                        {slide.signoff.includes('♡') && <span aria-hidden="true">♡</span>}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ) : slide.layout === 'book-showcase' && slide.id === 'book-showcase' ? (
+                /* Seamlessly Merged Grand Opening Showcase directly on the Mama's Moon storefront canvas */
+                <div className="hero-grand-opening shell">
+                  <div className="hero-grand-opening-stage">
+                    <button
+                      type="button"
+                      className="hero-grand-opening-book-btn"
+                      onClick={() => onPreviewBook(slideBook)}
+                      aria-label={`Peek inside ${slideBook.title}`}
+                      tabIndex={isCurrent ? 0 : -1}
+                    >
+                      <img
+                        src={slideBook.standingImage || slideBook.coverImage}
+                        alt={`${slideBook.title} — 3D hardcover story coloring book by Mama's Moon`}
+                        className="hero-grand-opening-book"
+                      />
+                    </button>
+                    <div className="hero-grand-opening-shadow" aria-hidden="true" />
+                  </div>
+
+                  <div className="hero-grand-opening-copy">
+                    <p className="eyebrow">
+                      <BrandName />
+                      {' · Grand Opening'}
+                    </p>
+                    <h1 id={isCurrent ? 'hero-title' : undefined} className="hero-grand-opening-heading">
+                      <span className="hero-grand-opening-kicker">Grand Opening</span>
+                      <span className="hero-grand-opening-title">The Little Moon Picnic</span>
+                    </h1>
+                    <p className="hero-editorial-subtitle">{slide.subtitle}</p>
+                    <p className="hero-grand-opening-specs">
+                      40 Hand-Drawn Pages · Physical &amp; Printable PDF · Ages 6–9
+                    </p>
+                    <div className="hero-editorial-actions">
+                      <a
+                        className="button button-ink whitespace-nowrap shrink-0"
+                        href={slide.primaryCta.href}
+                        onClick={(e) => handleCtaClick(e, slide.primaryCta, slideBook)}
+                        tabIndex={isCurrent ? 0 : -1}
+                      >
+                        {slide.primaryCta.label}
+                        <svg className="icon" aria-hidden="true">
+                          <use href="#arrow" />
+                        </svg>
+                      </a>
+                      <a
+                        className="button button-paper whitespace-nowrap shrink-0"
+                        href={slide.secondaryCta.href}
+                        onClick={(e) => handleCtaClick(e, slide.secondaryCta, slideBook)}
+                        tabIndex={isCurrent ? 0 : -1}
+                      >
+                        {slide.secondaryCta.label}
+                      </a>
+                    </div>
+                    {slide.signoff && (
+                      <p className="hero-signoff">
+                        {slide.signoff.replace('♡', '')}{' '}
+                        {slide.signoff.includes('♡') && <span aria-hidden="true">♡</span>}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ) : slide.layout === 'book-showcase' ? (
+                /* Full-Bleed Panoramic Book Showcase Stage */
                 <div className="cocowyo-showcase-banner-wrap">
                   <h1 id={isCurrent ? 'hero-title' : undefined} className="sr-only">
                     Mama&apos;s Moon — {slideBook.stageTagline} {slideBook.title}
@@ -240,8 +355,6 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                   <div className="cocowyo-banner-figure">
                     <img
                       src={imgSrc}
-                      width={2000}
-                      height={756}
                       fetchPriority={index === 0 ? 'high' : 'auto'}
                       alt={slide.imageAlt || `${slideBook.title} — Mama's Moon Book Showcase`}
                       className="cocowyo-banner-img"
@@ -399,6 +512,9 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
           );
         })}
       </div>
+
+      {/* Bottom Woven-Linen Scalloped Trim overhanging the white pagination strip */}
+      <HeroScallopTrim position="bottom" palette={activeTrimPalette} />
 
       {/* Coco Wyo-inspired White Bottom Pagination Dots Strip (Pause button removed) */}
       <div className="hero-pagination-bar" role="region" aria-label="Hero slide controls">

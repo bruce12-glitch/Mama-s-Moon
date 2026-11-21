@@ -35,6 +35,7 @@ import {
   getVisibleDigitalCombos,
   toggleSavedBookId,
   parseWishlistIds,
+  isNewArrival,
 } from './utils/moonMeshLogic';
 import { forestAudio } from './utils/forestAudio';
 import { HeroCarousel } from './components/HeroCarousel';
@@ -936,6 +937,7 @@ export default function App() {
               {filteredStickers.map((sticker) => {
                 const isAdded = recentlyAddedId === sticker.id;
                 const inBagCount = bagQuantities[sticker.id] || 0;
+                const isNew = isNewArrival(sticker.addedAt);
                 return (
                   <article key={sticker.id} className="sticker-card" id={sticker.id}>
                     <div
@@ -943,8 +945,13 @@ export default function App() {
                       style={{ background: sticker.bgTint }}
                       onClick={() => setActiveStickerPreview(sticker)}
                     >
-                      {sticker.badge && (
-                        <span className="store-corner-tag">{sticker.badge}</span>
+                      {(isNew || sticker.badge) && (
+                        <div className="store-corner-tag-row">
+                          {isNew && <span className="store-new-tag">New</span>}
+                          {sticker.badge && (
+                            <span className="store-corner-tag">{sticker.badge}</span>
+                          )}
+                        </div>
                       )}
                       <WishlistHeartButton
                         itemId={sticker.id}
@@ -962,9 +969,6 @@ export default function App() {
                           className="sticker-diecut-img"
                         />
                       </div>
-                      <span className="sticker-character-seal" aria-hidden="true">
-                        <img src={sticker.accentImage} alt="" width={48} height={48} />
-                      </span>
                     </div>
 
                     <div className="sticker-card-body">
@@ -1578,13 +1582,9 @@ export default function App() {
       {!giftDismissed && showGiftTab && (
         <aside className="gift-tab" aria-label="Free coloring page shortcut">
           <a href="#color" aria-label="Free coloring page">
-            <img
-              className="gift-doodle"
-              src="/assets/gift-doodle.svg"
-              width={32}
-              height={35}
-              alt=""
-            />
+            <svg className="icon gift-tab-icon" aria-hidden="true">
+              <use href="#crayon" />
+            </svg>
             <span>A little gift</span>
           </a>
           <button

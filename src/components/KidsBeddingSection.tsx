@@ -6,6 +6,7 @@ import {
 } from '../data/moonMeshData';
 import { BrandName } from './BrandName';
 import { WishlistHeartButton } from './WishlistHeartButton';
+import { isNewArrival } from '../utils/moonMeshLogic';
 
 const BEDDING_CATEGORY_TABS: { id: KidsBeddingCategory; label: string }[] = [
   { id: 'all', label: 'All Bedding (4)' },
@@ -101,6 +102,7 @@ export const KidsBeddingSection: React.FC<KidsBeddingSectionProps> = ({
             const inBagCount = bagQuantities[item.id] || 0;
             const activeSize = selectedSizes[item.id] || item.defaultSize;
             const imageFailed = Boolean(failedImages[item.id]);
+            const isNew = isNewArrival(item.addedAt);
 
             return (
               <article key={item.id} className="kids-bedding-card" id={item.id}>
@@ -112,7 +114,12 @@ export const KidsBeddingSection: React.FC<KidsBeddingSectionProps> = ({
                     aria-label={`Inspect ${item.title}`}
                     onClick={() => onPreviewItem(item)}
                   >
-                    {item.badge && <span className="store-corner-tag">{item.badge}</span>}
+                    {(isNew || item.badge) && (
+                      <div className="store-corner-tag-row">
+                        {isNew && <span className="store-new-tag">New</span>}
+                        {item.badge && <span className="store-corner-tag">{item.badge}</span>}
+                      </div>
+                    )}
                     <div className="kids-bedding-photo-wrap">
                       {!imageFailed ? (
                         <img

@@ -66,6 +66,7 @@ export interface StickerProduct {
   bgTint: string;
   etsyUrl: string;
   badge?: string;
+  addedAt?: string;
 }
 
 export type LaptopStickerFinish = 'all' | 'matte' | 'holographic' | 'lid-set';
@@ -87,6 +88,7 @@ export interface LaptopStickerProduct {
   bgTint: string;
   etsyUrl: string;
   badge?: string;
+  addedAt?: string;
   keywords: string;
 }
 
@@ -113,6 +115,7 @@ export interface KidsBeddingProduct {
   bgTint: string;
   etsyUrl: string;
   badge?: string;
+  addedAt?: string;
   keywords: string;
 }
 
@@ -258,7 +261,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     subtitle:
       'Stroll past Cocoa Lane and the North Pole signpost with Miso, Plum, Pip, and Sprout in our newest holiday story coloring book.',
     signoff: 'See you on Cocoa Lane ♡',
-    bgColor: '#EADBC8',
+    bgColor: '#F6EEE4',
     themeClass: 'slide-showcase',
     image: '/assets/hero-winter-village.jpg?v=mamas-moon-3',
     imageAlt:
@@ -277,7 +280,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     subtitle:
       'A Story Coloring Book for Kids Ages 6–9. Pull up a cushion at the low wooden table for warm buns, sweet berries, and cozy pages to color.',
     signoff: 'Now serving cozy moments ♡',
-    bgColor: '#F6EFE6',
+    bgColor: '#FAF4EC',
     themeClass: 'slide-showcase',
     image: '/assets/hero-book-showcase.png?v=mamas-moon-3',
     imageAlt:
@@ -355,6 +358,7 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     bgTint: '#FFF6E6',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+Miso+Friends+sticker+pack',
     badge: 'STUDIO FAVORITE',
+    addedAt: '2026-08-15',
   },
   {
     id: 'sticker-strawberry-beret-sheet',
@@ -373,6 +377,7 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     characters: ['Miso', 'Sprout'],
     bgTint: '#FDF0F4',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+strawberry+beret+sticker+sheet',
+    addedAt: '2026-11-04',
   },
   {
     id: 'sticker-moon-picnic-pack',
@@ -391,6 +396,7 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     characters: ['Miso', 'Plum', 'Pip'],
     bgTint: '#F4EEFC',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+picnic+vinyl+stickers',
+    addedAt: '2026-11-12',
   },
   {
     id: 'sticker-complete-collector-bundle',
@@ -411,6 +417,7 @@ export const STICKER_COLLECTIONS: StickerProduct[] = [
     bgTint: '#FFF8DF',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+sticker+bundle',
     badge: 'SAVE $5',
+    addedAt: '2026-09-20',
   },
 ];
 
@@ -431,6 +438,7 @@ export const LAPTOP_STICKER_PACKS: LaptopStickerProduct[] = [
     image: '/assets/laptop-sticker-cozy-coder.jpg',
     bgTint: '#F8EFE0',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+cozy+miso+laptop+stickers',
+    addedAt: '2026-11-10',
     keywords: 'laptop stickers vinyl decal macbook miso kitten cocoa mug matte removable',
   },
   {
@@ -449,6 +457,7 @@ export const LAPTOP_STICKER_PACKS: LaptopStickerProduct[] = [
     image: '/assets/laptop-sticker-moon-desk.jpg',
     bgTint: '#F1EAF8',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+starlight+holographic+laptop+stickers',
+    addedAt: '2026-11-15',
     keywords: 'laptop stickers holographic plum bunny pip star sketchbook lid decal macbook',
   },
   {
@@ -467,6 +476,7 @@ export const LAPTOP_STICKER_PACKS: LaptopStickerProduct[] = [
     image: '/assets/laptop-sticker-garden-break.jpg',
     bgTint: '#ECF4E8',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+sprout+garden+laptop+stickers',
+    addedAt: '2026-10-01',
     keywords: 'laptop stickers sprout snail tulip daisy botanical matte vinyl removable decal',
   },
   {
@@ -487,6 +497,7 @@ export const LAPTOP_STICKER_PACKS: LaptopStickerProduct[] = [
     bgTint: '#FBF1E4',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+complete+laptop+sticker+bundle',
     badge: 'SAVE $3',
+    addedAt: '2026-09-12',
     keywords: 'laptop stickers bundle lid set macbook crew miso plum pip sprout vinyl decal',
   },
 ];
@@ -511,6 +522,7 @@ export const KIDS_BEDDING_COLLECTION: KidsBeddingProduct[] = [
     bgTint: '#FBF5E8',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+organic+kids+bedsheet+set',
     badge: '100% ORGANIC COTTON',
+    addedAt: '2026-09-05',
     keywords: 'bedsheet kids bed sheets cotton percale toddler crib twin full miso kitten moon nursery',
   },
   {
@@ -531,6 +543,7 @@ export const KIDS_BEDDING_COLLECTION: KidsBeddingProduct[] = [
     image: '/src/assets/images/kids_bedsheet_starlight_garden_1795066221249.jpg',
     bgTint: '#EEF5EC',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+garden+kids+fitted+bedsheet',
+    addedAt: '2026-11-08',
     keywords: 'bedsheet toddler nursery crib garden snail sprout sheet set cotton ruffled sham kids room',
   },
   {
@@ -551,7 +564,7 @@ export const KIDS_BEDDING_COLLECTION: KidsBeddingProduct[] = [
     image: '/src/assets/images/kids_quilt_midnight_kittens_1795066223442.jpg',
     bgTint: '#F2ECF8',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+midnight+kittens+kids+quilt',
-    badge: 'REVERSIBLE QUILT',
+    addedAt: '2026-11-14',
     keywords: 'quilt blanket comforter kids bedroom bedsheet coverlet lavender buttercream kittens',
   },
   {
@@ -574,6 +587,7 @@ export const KIDS_BEDDING_COLLECTION: KidsBeddingProduct[] = [
     bgTint: '#FDF1EB',
     etsyUrl: 'https://www.etsy.com/search?q=Mamas+Moon+kids+room+bedding+bundle',
     badge: 'SAVE $22',
+    addedAt: '2026-10-10',
     keywords: 'kids room bedding bundle bedsheet throw blanket nursery gift twin full toddler linen',
   },
 ];
@@ -1088,7 +1102,7 @@ export const CATALOG_SECTIONS = [
     title: 'Meet Miso and friends',
     theme: 'Our story',
     href: '#story',
-    image: '/assets/crew-miso.svg',
+    image: '/assets/our-little-crew.webp',
     keywords: 'kitten cat rabbit snail star crew characters friends story',
   },
   {

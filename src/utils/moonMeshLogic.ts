@@ -338,3 +338,105 @@ export function filterKidsBeddingProducts<T extends { category: string }>(
   return items.filter((item) => item.category === category);
 }
 
+function toUtcDayTimestamp(input: Date | string): number | null {
+  if (input instanceof Date) {
+    if (Number.isNaN(input.getTime())) return null;
+    return Date.UTC(input.getUTCFullYear(), input.getUTCMonth(), input.getUTCDate());
+  }
+  const trimmed = input.trim();
+  const isoDateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
+  if (isoDateMatch) {
+    const year = Number(isoDateMatch[1]);
+    const month = Number(isoDateMatch[2]) - 1;
+    const day = Number(isoDateMatch[3]);
+    const utcMs = Date.UTC(year, month, day);
+    const check = new Date(utcMs);
+    if (
+      check.getUTCFullYear() !== year ||
+      check.getUTCMonth() !== month ||
+      check.getUTCDate() !== day
+    ) {
+      return null;
+    }
+    return utcMs;
+  }
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return Date.UTC(parsed.getUTCFullYear(), parsed.getUTCMonth(), parsed.getUTCDate());
+}
+
+/**
+ * Returns true when a product's `addedAt` ISO date is within the last `windowDays` days (inclusive)
+ * relative to `referenceDate`, ignoring invalid or future dates.
+ */
+export function isNewArrival(
+  addedAt?: string,
+  referenceDate: Date | string = new Date(),
+  windowDays = 30
+): boolean {
+  if (!addedAt || windowDays < 0) return false;
+  const addedDayMs = toUtcDayTimestamp(addedAt);
+  const refDayMs = toUtcDayTimestamp(referenceDate);
+  if (addedDayMs === null || refDayMs === null) return false;
+  const diffDays = (refDayMs - addedDayMs) / 86_400_000;
+  return diffDays >= 0 && diffDays <= windowDays;
+}
+
+export interface HeroTrimPalette {
+  base: string;
+  dark: string;
+  light: string;
+  edgeShadow: string;
+}
+
+const HERO_TRIM_PALETTES: Record<string, HeroTrimPalette> = {
+  'christmas-book-showcase': {
+    base: '#b85a72',
+    dark: '#8d3c53',
+    light: '#e8b6c3',
+    edgeShadow: 'rgba(120, 44, 66, 0.18)',
+  },
+  'winter-village-showcase': {
+    base: '#a67456',
+    dark: '#7c5138',
+    light: '#dec0aa',
+    edgeShadow: 'rgba(98, 60, 38, 0.18)',
+  },
+  'book-showcase': {
+    base: '#c49352',
+    dark: '#976c32',
+    light: '#edd2a4',
+    edgeShadow: 'rgba(118, 82, 34, 0.18)',
+  },
+  'moon-color': {
+    base: '#9577b3',
+    dark: '#6f538c',
+    light: '#d6c3e8',
+    edgeShadow: 'rgba(84, 60, 110, 0.18)',
+  },
+  'coloring-treat': {
+    base: '#c66782',
+    dark: '#99455e',
+    light: '#f0bccb',
+    edgeShadow: 'rgba(128, 48, 72, 0.18)',
+  },
+  'come-join-us': {
+    base: '#718d69',
+    dark: '#526b4b',
+    light: '#c3d6bc',
+    edgeShadow: 'rgba(66, 92, 60, 0.18)',
+  },
+};
+
+const DEFAULT_HERO_TRIM_PALETTE: HeroTrimPalette = HERO_TRIM_PALETTES['christmas-book-showcase'];
+
+/**
+ * Returns the woven scalloped hero trim colors matched to Mama's Moon's warm storybook palette
+ * for the active hero slide (preserving the woven scalloped design in brand-native hues).
+ */
+export function getHeroTrimPalette(slideId?: string): HeroTrimPalette {
+  if (!slideId) return DEFAULT_HERO_TRIM_PALETTE;
+  return HERO_TRIM_PALETTES[slideId] ?? DEFAULT_HERO_TRIM_PALETTE;
+}
+
+

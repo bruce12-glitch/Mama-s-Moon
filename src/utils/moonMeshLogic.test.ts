@@ -17,6 +17,9 @@ import {
   filterLaptopStickers,
   filterKidsBeddingProducts,
   parseWishlistIds,
+  isNewArrival,
+  getHeroTrimPalette,
+  getHeroSlideTransitionState,
 } from './moonMeshLogic';
 import {
   HERO_SLIDES,
@@ -358,5 +361,38 @@ test('parseWishlistIds hydrates valid product IDs across Books, Stickers, Beddin
 
   assert.equal(parseWishlistIds('not-valid-json{', validIds).size, 0);
 });
+
+test('isNewArrival highlights products added within the last 30 days only', () => {
+  const refDate = '2026-11-18';
+  assert.equal(isNewArrival('2026-11-18', refDate, 30), true);
+  assert.equal(isNewArrival('2026-10-19', refDate, 30), true);
+  assert.equal(isNewArrival('2026-10-18', refDate, 30), false);
+  assert.equal(isNewArrival('2026-11-19', refDate, 30), false);
+  assert.equal(isNewArrival(undefined, refDate, 30), false);
+  assert.equal(isNewArrival('not-a-date', refDate, 30), false);
+
+  const newStickers = STICKER_COLLECTIONS.filter((s) => isNewArrival(s.addedAt, refDate, 30));
+  assert.equal(newStickers.length, 2);
+
+  const newLaptopDecals = LAPTOP_STICKER_PACKS.filter((p) => isNewArrival(p.addedAt, refDate, 30));
+  assert.equal(newLaptopDecals.length, 2);
+
+  const newBedding = KIDS_BEDDING_COLLECTION.filter((b) => isNewArrival(b.addedAt, refDate, 30));
+  assert.equal(newBedding.length, 2);
+});
+
+test('getHeroTrimPalette returns warm Mama’s Moon woven trim colors for every hero slide', () => {
+  const hexRegex = /^#[0-9a-f]{6}$/i;
+  for (const slide of HERO_SLIDES) {
+    const palette = getHeroTrimPalette(slide.id);
+    assert.match(palette.base, hexRegex);
+    assert.match(palette.dark, hexRegex);
+    assert.match(palette.light, hexRegex);
+    assert.notEqual(palette.base.toLowerCase(), '#1c2e4a');
+  }
+  const fallback = getHeroTrimPalette('unknown-slide');
+  assert.equal(fallback.base, getHeroTrimPalette('christmas-book-showcase').base);
+});
+
 
 
