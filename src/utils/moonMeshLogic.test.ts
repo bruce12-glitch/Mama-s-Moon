@@ -121,22 +121,22 @@ test('isEraserSwatch identifies eraser hex codes', () => {
 
 test('HERO_SLIDES includes Christmas, Winter Village Tabletop, Winter Village Editorial, and Grand Opening book showcase slides', () => {
   assert.equal(HERO_SLIDES[0].id, 'christmas-book-showcase');
-  assert.equal(HERO_SLIDES[0].image, '/assets/aistudio/image_ae411272.png');
+  assert.equal(HERO_SLIDES[0].image, './assets/aistudio/image_ae411272.png');
   assert.equal(HERO_SLIDES[0].layout, 'book-showcase');
   assert.equal(HERO_SLIDES[1].id, 'winter-village-full-banner');
-  assert.equal(HERO_SLIDES[1].image, '/assets/hero-winter-village-panoramic.jpg');
+  assert.equal(HERO_SLIDES[1].image, './assets/hero-winter-village-panoramic.jpg');
   assert.equal(HERO_SLIDES[2].id, 'winter-village-showcase');
-  assert.ok(HERO_SLIDES[2].image.startsWith('/assets/hero-winter-village.jpg'));
+  assert.ok(HERO_SLIDES[2].image.startsWith('./assets/hero-winter-village.jpg'));
   assert.equal(HERO_SLIDES[3].id, 'book-showcase');
-  assert.ok(HERO_SLIDES[3].image.startsWith('/assets/hero-book-showcase.png'));
+  assert.ok(HERO_SLIDES[3].image.startsWith('./assets/hero-book-showcase.png'));
 });
 
 test('BOOKS catalog contains The Little Moon Picnic and Christmas & New Year with valid cover paths', () => {
   assert.equal(BOOKS.length, 2);
   assert.equal(BOOKS[0].id, 'little-moon-picnic');
-  assert.ok(BOOKS[0].coverImage.startsWith('/assets/the-little-moon-picnic-book.png'));
+  assert.ok(BOOKS[0].coverImage.startsWith('./assets/the-little-moon-picnic-book.png'));
   assert.equal(BOOKS[1].id, 'christmas-new-year');
-  assert.ok(BOOKS[1].coverImage.startsWith('/assets/christmas-new-year-book.png'));
+  assert.ok(BOOKS[1].coverImage.startsWith('./assets/christmas-new-year-book.png'));
 });
 
 test('getForestAudioUiState switches between speaker and muted states accurately', () => {
@@ -439,7 +439,7 @@ test('getPrintFriendlyStudioConfig switches digital SVG coloring studio to pure 
 test('HERO_SLIDES includes the dedicated Winter Village tabletop banner slide with its local asset', () => {
   const bannerSlide = HERO_SLIDES.find((s) => s.id === 'winter-village-full-banner');
   assert.ok(bannerSlide, 'Expected winter-village-full-banner slide in HERO_SLIDES');
-  assert.equal(bannerSlide?.image, '/assets/hero-winter-village-panoramic.jpg');
+  assert.equal(bannerSlide?.image, './assets/hero-winter-village-panoramic.jpg');
   assert.equal(bannerSlide?.bookId, 'christmas-new-year');
   const trim = getHeroTrimPalette('winter-village-full-banner');
   assert.equal(trim.base, '#8a5934');

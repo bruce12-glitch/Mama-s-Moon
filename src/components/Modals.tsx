@@ -262,23 +262,23 @@ export const BookPreviewModal: React.FC<BookPreviewModalProps> = ({
             <div className="cocowyo-shelf-wood" aria-hidden="true" />
             <div className="cocowyo-book-stage-group" aria-hidden="true">
               <img
-                src="/assets/prop-courier-bird.webp"
+                src="./assets/prop-courier-bird.webp"
                 alt=""
                 className="book-stage-prop prop-courier-bird"
               />
               <img
-                src="/assets/prop-open-easel.webp"
+                src="./assets/prop-open-easel.webp"
                 alt=""
                 className="book-stage-prop prop-open-easel"
               />
               <img
-                src="/assets/prop-alcohol-marker.webp"
+                src="./assets/prop-alcohol-marker.webp"
                 alt=""
                 className="book-stage-prop prop-alcohol-marker"
               />
               <span className="standing-3d-book-figure">
                 <img
-                  src={book.standingImage || '/assets/standing-3d-book.webp?v=mamas-moon-3'}
+                  src={book.standingImage || './assets/standing-3d-book.webp?v=mamas-moon-3'}
                   width={670}
                   height={745}
                   alt=""

@@ -44,7 +44,7 @@ export const ColoringStudioModal: React.FC<ColoringStudioModalProps> = ({ isOpen
     container.textContent = 'Getting Miso’s page ready…';
     container.setAttribute('aria-busy', 'true');
 
-    fetch('/assets/miso-moon-coloring.svg')
+    fetch('./assets/miso-moon-coloring.svg')
       .then((res) => {
         if (!res.ok) throw new Error('Coloring page unavailable');
         return res.text();
@@ -349,7 +349,7 @@ export const ColoringStudioModal: React.FC<ColoringStudioModalProps> = ({ isOpen
           </button>
           <a
             className="text-link studio-action"
-            href="/assets/miso-moon-coloring.pdf"
+            href="./assets/miso-moon-coloring.pdf"
             download
           >
             <svg className="icon" aria-hidden="true">

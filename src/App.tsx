@@ -793,7 +793,7 @@ export default function App() {
               >
                 <img
                   className="crew-img crew-img-outline"
-                  src="/assets/our-little-crew-outline.webp"
+                  src="./assets/our-little-crew-outline.webp"
                   width={1400}
                   height={467}
                   alt=""
@@ -801,7 +801,7 @@ export default function App() {
                 />
                 <img
                   className="crew-img crew-img-color"
-                  src="/assets/our-little-crew.webp"
+                  src="./assets/our-little-crew.webp"
                   width={1400}
                   height={467}
                   alt=""
@@ -881,26 +881,26 @@ export default function App() {
                     >
                       <span className="cocowyo-book-stage-group">
                         <img
-                          src="/assets/prop-courier-bird.webp"
+                          src="./assets/prop-courier-bird.webp"
                           alt=""
                           aria-hidden="true"
                           className="book-stage-prop prop-courier-bird"
                         />
                         <img
-                          src="/assets/prop-open-easel.webp"
+                          src="./assets/prop-open-easel.webp"
                           alt=""
                           aria-hidden="true"
                           className="book-stage-prop prop-open-easel"
                         />
                         <img
-                          src="/assets/prop-alcohol-marker.webp"
+                          src="./assets/prop-alcohol-marker.webp"
                           alt=""
                           aria-hidden="true"
                           className="book-stage-prop prop-alcohol-marker"
                         />
                         <span className="standing-3d-book-figure">
                           <img
-                            src={book.standingImage || '/assets/standing-3d-book.webp?v=mamas-moon-3'}
+                            src={book.standingImage || './assets/standing-3d-book.webp?v=mamas-moon-3'}
                             width={670}
                             height={745}
                             alt={`${book.title} — 3D hardcover storybook edition`}
@@ -1312,8 +1312,8 @@ export default function App() {
                   ref={inlineVideoRef}
                   className="clip-video"
                   id="inline-coloring-video"
-                  src="/assets/coloring-table.mp4"
-                  poster="/assets/coloring-table-poster.webp"
+                  src="./assets/coloring-table.mp4"
+                  poster="./assets/coloring-table-poster.webp"
                   width={1080}
                   height={1920}
                   autoPlay
@@ -1335,7 +1335,7 @@ export default function App() {
                     }
                   }}
                 >
-                  <a href="/assets/coloring-table.mp4">Watch the coloring clip</a>
+                  <a href="./assets/coloring-table.mp4">Watch the coloring clip</a>
                 </video>
               </div>
               <p id="inline-video-description" className="visually-hidden">
@@ -1374,7 +1374,7 @@ export default function App() {
                 </button>
                 <a
                   className="button button-outline whitespace-nowrap shrink-0"
-                  href="/assets/miso-moon-coloring.pdf"
+                  href="./assets/miso-moon-coloring.pdf"
                   download
                 >
                   <svg className="icon" aria-hidden="true">
@@ -1393,7 +1393,7 @@ export default function App() {
                   <BrandName /> Coloring Club
                 </span>
                 <img
-                  src="/assets/miso-moon-coloring.svg"
+                  src="./assets/miso-moon-coloring.svg"
                   width={1254}
                   height={1254}
                   alt="Miso reading a coloring book on a crescent moon, with stars, a cloud, and a crayon."
@@ -1484,7 +1484,7 @@ export default function App() {
           <div className="shell faq-inner">
             <figure className="faq-art">
               <img
-                src="/assets/books-and-little-moments.webp"
+                src="./assets/books-and-little-moments.webp"
                 width={1100}
                 height={619}
                 alt="Miso peeks out of a box of books while Plum wraps one as a gift."
@@ -1606,7 +1606,7 @@ export default function App() {
         <div className="footer-scene">
           <figure className="footer-illustration">
             <img
-              src="/assets/see-you-on-the-moon.webp"
+              src="./assets/see-you-on-the-moon.webp"
               width={1400}
               height={477}
               alt="Miso and Plum wave goodbye with Pip and Sprout beside their open coloring book."
@@ -1637,7 +1637,7 @@ export default function App() {
               <div>
                 <h2>Coloring Club</h2>
                 <a href="#color">Color online</a>
-                <a href="/assets/miso-moon-coloring.pdf" download>
+                <a href="./assets/miso-moon-coloring.pdf" download>
                   Print the free page
                 </a>
                 <a href="#story">Meet the crew</a>

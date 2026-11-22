@@ -1763,7 +1763,7 @@ img {
 .cocowyo-shelf-stage {
   position: relative;
   isolation: isolate;
-  background: url("/assets/book-stage-backdrop.webp") center / cover no-repeat;
+  background: url("./assets/book-stage-backdrop.webp") center / cover no-repeat;
 }
 
 .cocowyo-shelf-curtains {

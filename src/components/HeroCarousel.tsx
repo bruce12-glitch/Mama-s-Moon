@@ -145,17 +145,17 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
 
   const getFallbackImage = (slide: HeroSlide) => {
     if (imageErrors[slide.id]) {
-      if (slide.id === 'coloring-treat') return '/assets/hero-coloring-treat.jpg';
-      if (slide.id === 'come-join-us') return '/assets/hero-come-join-us.jpg';
+      if (slide.id === 'coloring-treat') return './assets/hero-coloring-treat.jpg';
+      if (slide.id === 'come-join-us') return './assets/hero-come-join-us.jpg';
       if (
         slide.id === 'christmas-book-showcase' ||
         slide.id === 'winter-village-full-banner' ||
         slide.id === 'winter-village-showcase'
       ) {
-        return '/assets/christmas-new-year-book.png?v=mamas-moon-3';
+        return './assets/christmas-new-year-book.png?v=mamas-moon-3';
       }
-      if (slide.id === 'book-showcase') return '/assets/the-little-moon-picnic-book.png?v=mamas-moon-3';
-      return '/assets/color-together.webp';
+      if (slide.id === 'book-showcase') return './assets/the-little-moon-picnic-book.png?v=mamas-moon-3';
+      return './assets/color-together.webp';
     }
     return slide.image;
   };
