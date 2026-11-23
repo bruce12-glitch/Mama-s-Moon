@@ -126,7 +126,7 @@ test('HERO_SLIDES includes Christmas, Winter Village Tabletop, Winter Village Ed
   assert.equal(HERO_SLIDES[1].id, 'winter-village-full-banner');
   assert.equal(HERO_SLIDES[1].image, './assets/hero-winter-village-panoramic.jpg');
   assert.equal(HERO_SLIDES[2].id, 'winter-village-showcase');
-  assert.ok(HERO_SLIDES[2].image.startsWith('./assets/hero-winter-village.jpg'));
+  assert.ok(HERO_SLIDES[2].image.startsWith('./assets/hero-winter-village-editorial.jpg'));
   assert.equal(HERO_SLIDES[3].id, 'book-showcase');
   assert.ok(HERO_SLIDES[3].image.startsWith('./assets/hero-book-showcase.png'));
 });
@@ -442,5 +442,7 @@ test('HERO_SLIDES includes the dedicated Winter Village tabletop banner slide wi
   assert.equal(bannerSlide?.image, './assets/hero-winter-village-panoramic.jpg');
   assert.equal(bannerSlide?.bookId, 'christmas-new-year');
   const trim = getHeroTrimPalette('winter-village-full-banner');
-  assert.equal(trim.base, '#8a5934');
+  assert.equal(trim.base, '#e5b855');
+  const editorialTrim = getHeroTrimPalette('winter-village-showcase');
+  assert.equal(editorialTrim.base, '#6c98c2');
 });

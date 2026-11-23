@@ -595,9 +595,14 @@ img {
    COCO WYO-INSPIRED ANIMATED HERO CAROUSEL & RESPONSIVE TRANSITIONS
    ========================================================================== */
 .hero-carousel {
-  --hero-stage-h: clamp(350px, calc(100svh - 268px), 532px);
+  --hero-header-offset: 150px;
+  --hero-pagination-h: 62px;
+  --hero-stage-h: clamp(460px, calc(100svh - var(--hero-header-offset) - var(--hero-pagination-h)), 880px);
   position: relative;
   isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - var(--hero-header-offset));
   width: 100%;
   margin: 0 auto;
   overflow-x: clip;
@@ -605,40 +610,45 @@ img {
 }
 
 .hero-scallop-trim {
-  position: relative;
-  z-index: 6;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 12;
   width: 100%;
-  height: 30px;
+  height: 20px;
   line-height: 0;
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(0 1.5px 2px var(--hero-trim-shadow, rgba(84, 52, 58, 0.16)));
 }
 
 .hero-scallop-trim--top {
-  margin-bottom: 0;
+  top: 0;
+  filter: drop-shadow(0 2.5px 5px var(--hero-trim-shadow, rgba(164, 48, 74, 0.22)));
 }
 
 .hero-scallop-trim--bottom {
-  margin-top: 0;
-  margin-bottom: -8px;
+  bottom: 0;
+  transform: scaleY(-1);
+  filter: drop-shadow(0 2.5px 5px var(--hero-trim-shadow, rgba(164, 48, 74, 0.22)));
 }
 
 .hero-scallop-svg {
   display: block;
   width: 100%;
-  height: 30px;
+  height: 20px;
   overflow: visible;
 }
 
 .hero-scallop-base-rect {
-  transition: fill 0.65s var(--ease-smooth);
+  transition: fill 0.6s var(--ease-smooth);
 }
 
 .hero-slides-stage {
   position: relative;
   display: block;
+  flex: 1 1 auto;
   height: var(--hero-stage-h);
+  min-height: var(--hero-stage-h);
   overflow: hidden;
 }
 
@@ -698,7 +708,7 @@ img {
 .hero-art {
   position: absolute;
   z-index: -1;
-  inset: 10px max(24px, calc((100% - 1440px) / 2));
+  inset: 28px max(24px, calc((100% - 1440px) / 2));
   transition: transform 0.65s var(--ease-smooth);
 }
 
@@ -726,7 +736,7 @@ img {
 .hero-copy {
   width: 44%;
   max-width: 460px;
-  padding-block: 16px;
+  padding-block: 30px;
 }
 
 .hero-slide-panel.is-active .hero-copy > * {
@@ -826,6 +836,7 @@ img {
 
 .cocowyo-showcase-banner-wrap.is-christmas-banner {
   background: linear-gradient(90deg, #fbe6e5 0%, #fae5e5 50%, #f9e5e5 100%);
+  padding-block: 26px;
 }
 
 .cocowyo-showcase-banner-wrap.is-winter-tabletop-banner {
@@ -891,7 +902,7 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 52%;
+  object-position: center center;
 }
 
 .cocowyo-banner-img--cafe {
@@ -900,91 +911,175 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 48%;
+  object-position: center center;
 }
 
-/* Full-Bleed Editorial Feature Split for 16:9 Showcase Slides (Zero Cropping, Zero Clipping) */
+/* Seamlessly Merged Full-Bleed Winter Edition Editorial Slide */
 .hero-editorial-showcase {
   position: relative;
   z-index: 3;
   display: grid;
-  grid-template-columns: minmax(0, 1.56fr) minmax(320px, 0.9fr);
+  grid-template-columns: minmax(0, 1.72fr) minmax(380px, 0.98fr);
   align-items: stretch;
   gap: 0;
   width: 100%;
   height: 100%;
   margin-inline: 0;
   padding: 0;
+  background: linear-gradient(115deg, #f8f1e7 0%, #f3e7d8 100%);
+  overflow: hidden;
 }
 
 .hero-editorial-frame {
-  position: relative;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: clamp(64%, 67%, 1060px);
+  height: 100%;
   border-radius: 0;
   overflow: hidden;
-  background: #f5ebe0;
-  padding: 12px 16px;
+  background: transparent;
+  padding: 0;
   border: 0;
   box-shadow: none;
   line-height: 0;
-  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  z-index: 1;
+}
+
+.hero-editorial-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 239, 228, 0) 0%,
+    rgba(247, 239, 228, 0) 80%,
+    rgba(247, 239, 228, 0.24) 86%,
+    rgba(246, 237, 225, 0.62) 91%,
+    rgba(245, 235, 222, 0.9) 95.5%,
+    #f4e8da 100%
+  );
 }
 
 .hero-editorial-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
-  border-radius: 12px;
+  object-fit: cover;
+  object-position: left center;
+  border-radius: 0;
   display: block;
   cursor: var(--cursor-pointer);
-  transition: transform 0.45s var(--ease-smooth);
+  transition: transform 0.55s var(--ease-smooth);
 }
 
 .hero-editorial-frame:hover .hero-editorial-img {
-  transform: scale(1.015);
+  transform: scale(1.012);
 }
 
 .hero-editorial-copy {
+  position: relative;
+  z-index: 3;
+  grid-column: 2;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   text-align: left;
-  padding: clamp(18px, 2.2vw, 34px) clamp(24px, 3vw, 44px);
-  background: linear-gradient(135deg, #f8f1e8 0%, #f3e7d8 100%);
-  border-left: 1px solid rgba(108, 68, 33, 0.12);
+  padding: clamp(32px, 3.2vw, 48px) clamp(28px, 3.4vw, 52px) clamp(32px, 3.2vw, 48px) clamp(26px, 2.6vw, 42px);
+  background: linear-gradient(
+    90deg,
+    rgba(246, 237, 225, 0) 0%,
+    rgba(245, 235, 223, 0.72) 10%,
+    rgba(244, 233, 219, 0.96) 22%,
+    #f3e7d8 100%
+  );
+  border-left: 0;
   overflow: hidden;
+}
+
+.hero-winter-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #416b92;
+}
+
+.hero-winter-eyebrow-rule {
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: #6c98c2;
 }
 
 .hero-editorial-heading {
   font-family: var(--bubble-display);
-  font-size: clamp(26px, 2.5vw, 38px) !important;
+  font-size: clamp(28px, 2.7vw, 40px) !important;
   font-weight: 700;
-  line-height: 1.1 !important;
+  line-height: 1.09 !important;
   color: #36221c !important;
   text-wrap: balance;
 }
 
 .hero-editorial-subtitle {
-  margin-top: 10px;
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: #5b4840;
+  margin-top: 12px;
+  font-size: 15.5px;
+  line-height: 1.58;
+  color: #5d4a41;
 }
 
 .hero-editorial-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 10px;
-  margin-top: 16px;
+  gap: 10px 12px;
+  margin-top: 22px;
+}
+
+.button-winter-primary {
+  background: #3b2620;
+  color: #ffffff;
+  border: 1.5px solid #3b2620;
+  box-shadow: 0 6px 18px rgba(59, 38, 32, 0.2);
+}
+
+.button-winter-primary:hover {
+  background: #271814;
+  border-color: #271814;
+  color: #ffffff;
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 22px rgba(39, 24, 20, 0.26);
+}
+
+.button-winter-secondary {
+  background: #fffdf9;
+  color: #3b2620;
+  border: 1.5px solid rgba(59, 38, 32, 0.22);
+}
+
+.button-winter-secondary:hover {
+  background: #f5f9fd;
+  border-color: rgba(108, 152, 194, 0.6);
+  color: #3a6489;
+  transform: translateY(-1.5px);
 }
 
 .hero-editorial-copy .hero-signoff {
-  margin-top: 12px;
+  margin-top: 16px;
+  color: #6a554a;
+}
+
+.hero-editorial-copy .hero-signoff span {
+  color: #5b87b2;
 }
 
 .cocowyo-banner-book-hotspot {
@@ -1283,7 +1378,7 @@ img {
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding-block: 10px 10px;
+  padding-block: 30px 30px;
   gap: 8px;
 }
 
@@ -1380,28 +1475,35 @@ img {
 
 .hero-floating-star {
   position: absolute;
-  color: #e6b83a;
-  font-size: 24px;
+  color: #d49b2a;
+  font-size: 22px;
   animation: star-twinkle 2.8s ease-in-out infinite;
 }
 
-.hero-floating-star.star-1 { top: 10%; left: 6%; animation-delay: 0s; }
-.hero-floating-star.star-2 { top: 14%; left: 92%; font-size: 20px; animation-delay: 0.9s; }
-.hero-floating-star.star-3 { top: 82%; left: 8%; font-size: 20px; animation-delay: 1.8s; }
+.hero-floating-star.star-1 { top: 14%; left: 6%; animation-delay: 0s; }
+.hero-floating-star.star-2 { top: 16%; left: 92%; font-size: 19px; animation-delay: 0.9s; }
+.hero-floating-star.star-3 { top: 78%; left: 8%; font-size: 19px; animation-delay: 1.8s; }
 
-/* Coco Wyo Pagination Dots Strip */
+/* Crisp Bottom Pagination Controls Strip */
 .hero-pagination-bar {
   position: relative;
   z-index: 5;
+  flex-shrink: 0;
   background: #ffffff;
-  padding-top: 6px;
-  padding-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 6px;
   border-top: 0;
   border-bottom: 1px solid rgba(50, 47, 55, 0.06);
 }
 
 @media (max-width: 960px) {
+  .hero-carousel {
+    min-height: 0;
+  }
+
   .hero-slides-stage {
+    flex: none;
+    min-height: 0;
     height: auto;
   }
 
@@ -1419,17 +1521,31 @@ img {
   }
 
   .hero-editorial-frame {
+    position: relative;
+    inset: auto;
+    width: 100%;
     aspect-ratio: 16 / 9;
     height: auto;
   }
 
+  .hero-editorial-frame::after {
+    background: linear-gradient(
+      180deg,
+      rgba(246, 237, 225, 0) 0%,
+      rgba(246, 237, 225, 0) 78%,
+      #f6ede1 100%
+    );
+  }
+
   .hero-editorial-copy {
+    grid-column: 1;
     align-items: center;
     text-align: center;
     max-width: 100%;
-    padding: 22px 20px 24px;
+    padding: 20px 20px 40px;
+    background: #f6ede1;
     border-left: 0;
-    border-top: 1px solid rgba(108, 68, 33, 0.12);
+    border-top: 0;
   }
 
   .hero-editorial-actions {
@@ -1466,48 +1582,56 @@ img {
 .hero-dots {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .hero-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   padding: 0;
-  border-radius: 50%;
-  border: 1.5px solid #8c8288;
-  background: #8c8288;
-  transition: transform 0.25s var(--ease-smooth), background-color 0.25s var(--ease-smooth), border-color 0.25s var(--ease-smooth);
+  border-radius: 999px;
+  border: 0;
+  background: #cfc8ce;
+  transition:
+    width 0.3s var(--ease-smooth),
+    transform 0.25s var(--ease-smooth),
+    background-color 0.35s var(--ease-smooth);
 }
 
 .hero-dot:hover {
-  transform: scale(1.25);
-  border-color: var(--ink);
+  transform: scale(1.2);
+  background: var(--hero-accent, #d14763);
 }
 
 .hero-dot.is-selected {
-  background: transparent;
-  border-color: var(--ink);
-  border-width: 2px;
-  transform: scale(1.25);
+  width: 24px;
+  background: var(--hero-accent, #d14763);
+  transform: none;
 }
 
 .hero-nav-arrow {
   display: inline-grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 1px solid #e2dce6;
-  background: #faf8fc;
-  color: var(--ink);
+  border: 1px solid rgba(33, 30, 36, 0.14);
+  background: #ffffff;
+  color: #362f38;
   font-size: 18px;
   line-height: 1;
-  transition: background-color 0.2s var(--ease-smooth), transform 0.2s var(--ease-smooth);
+  transition:
+    background-color 0.2s var(--ease-smooth),
+    border-color 0.2s var(--ease-smooth),
+    color 0.2s var(--ease-smooth),
+    transform 0.2s var(--ease-smooth);
 }
 
 .hero-nav-arrow:hover {
-  background: var(--lilac);
-  transform: scale(1.08);
+  background: #faf9fb;
+  border-color: var(--hero-accent, #d14763);
+  color: var(--hero-accent, #d14763);
+  transform: scale(1.06);
 }
 
 .hero-autoplay-toggle {

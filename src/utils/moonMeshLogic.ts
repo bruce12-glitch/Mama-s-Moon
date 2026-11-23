@@ -391,54 +391,53 @@ export interface HeroTrimPalette {
 
 const HERO_TRIM_PALETTES: Record<string, HeroTrimPalette> = {
   'christmas-book-showcase': {
-    base: '#b85a72',
-    dark: '#8d3c53',
-    light: '#e8b6c3',
-    edgeShadow: 'rgba(120, 44, 66, 0.18)',
+    base: '#d14763',
+    dark: '#aa304a',
+    light: '#ffd0db',
+    edgeShadow: 'rgba(170, 48, 74, 0.18)',
   },
   'winter-village-full-banner': {
-    base: '#8a5934',
-    dark: '#623c1f',
-    light: '#d8b490',
-    edgeShadow: 'rgba(72, 42, 20, 0.22)',
+    base: '#e5b855',
+    dark: '#be8e2d',
+    light: '#fff3cf',
+    edgeShadow: 'rgba(130, 88, 22, 0.2)',
   },
   'winter-village-showcase': {
-    base: '#a67456',
-    dark: '#7c5138',
-    light: '#dec0aa',
-    edgeShadow: 'rgba(98, 60, 38, 0.18)',
+    base: '#6c98c2',
+    dark: '#4b759d',
+    light: '#e2effa',
+    edgeShadow: 'rgba(58, 94, 130, 0.18)',
   },
   'book-showcase': {
-    base: '#c49352',
-    dark: '#976c32',
-    light: '#edd2a4',
-    edgeShadow: 'rgba(118, 82, 34, 0.18)',
+    base: '#dc4d71',
+    dark: '#b43556',
+    light: '#ffd1de',
+    edgeShadow: 'rgba(164, 46, 78, 0.18)',
   },
   'moon-color': {
-    base: '#9577b3',
-    dark: '#6f538c',
-    light: '#d6c3e8',
-    edgeShadow: 'rgba(84, 60, 110, 0.18)',
+    base: '#8d6cb8',
+    dark: '#6c4d96',
+    light: '#e4d6f7',
+    edgeShadow: 'rgba(92, 64, 130, 0.18)',
   },
   'coloring-treat': {
-    base: '#c66782',
-    dark: '#99455e',
-    light: '#f0bccb',
-    edgeShadow: 'rgba(128, 48, 72, 0.18)',
+    base: '#df4b72',
+    dark: '#b63357',
+    light: '#ffd0de',
+    edgeShadow: 'rgba(162, 42, 74, 0.18)',
   },
   'come-join-us': {
-    base: '#718d69',
-    dark: '#526b4b',
-    light: '#c3d6bc',
-    edgeShadow: 'rgba(66, 92, 60, 0.18)',
+    base: '#e05a5a',
+    dark: '#b83f3f',
+    light: '#ffd4d4',
+    edgeShadow: 'rgba(164, 52, 52, 0.18)',
   },
 };
 
 const DEFAULT_HERO_TRIM_PALETTE: HeroTrimPalette = HERO_TRIM_PALETTES['christmas-book-showcase'];
 
 /**
- * Returns the woven scalloped hero trim colors matched to Mama's Moon's warm storybook palette
- * for the active hero slide (preserving the woven scalloped design in brand-native hues).
+ * Returns cheerful, template-matched storybook trim colors curated for each hero slide.
  */
 export function getHeroTrimPalette(slideId?: string): HeroTrimPalette {
   if (!slideId) return DEFAULT_HERO_TRIM_PALETTE;

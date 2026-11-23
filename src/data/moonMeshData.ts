@@ -274,7 +274,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'winter-village-showcase',
     bookId: 'christmas-new-year',
-    eyebrow: "Mama's Moon × Miso & Friends",
+    eyebrow: 'Winter Edition',
     titleLines: ['Follow Miso & Friends', 'Around Winter Village'],
     accentLine: 'Winter Village',
     subtitle:
@@ -282,7 +282,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     signoff: 'See you on Cocoa Lane ♡',
     bgColor: '#F6EEE4',
     themeClass: 'slide-showcase',
-    image: './assets/hero-winter-village.jpg?v=mamas-moon-3',
+    image: './assets/hero-winter-village-editorial.jpg',
     imageAlt:
       "Follow Miso & Friends Around Winter Village — stack of Mama's Moon Christmas & New Year coloring books on a wooden tabletop with Winter Village signpost, character stickers, and alcohol markers.",
     layout: 'book-showcase',

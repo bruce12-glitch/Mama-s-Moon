@@ -14,14 +14,14 @@ interface HeroCarouselProps {
 }
 
 const CONFETTI_PIECES = [
-  { id: 1, color: '#F5C95D', top: '8%', left: '5%', rot: '-18deg', delay: '0s', dur: '5.2s' },
-  { id: 2, color: '#70B5E8', top: '9%', left: '32%', rot: '22deg', delay: '0.7s', dur: '6.1s' },
-  { id: 3, color: '#7BC697', top: '18%', left: '47%', rot: '-12deg', delay: '1.3s', dur: '5.6s' },
-  { id: 4, color: '#F5C95D', top: '52%', left: '3%', rot: '28deg', delay: '0.4s', dur: '6.4s' },
-  { id: 5, color: '#70B5E8', top: '88%', left: '14%', rot: '-24deg', delay: '1.8s', dur: '5.8s' },
-  { id: 6, color: '#F5C95D', top: '86%', left: '38%', rot: '15deg', delay: '1.1s', dur: '5.4s' },
-  { id: 7, color: '#7BC697', top: '44%', left: '94%', rot: '-20deg', delay: '0.9s', dur: '6.0s' },
-  { id: 8, color: '#70B5E8', top: '78%', left: '91%', rot: '19deg', delay: '2.1s', dur: '5.5s' },
+  { id: 1, color: '#F5C856', top: '12%', left: '5%', rot: '-18deg', delay: '0s', dur: '5.2s' },
+  { id: 2, color: '#DF4B72', top: '13%', left: '32%', rot: '22deg', delay: '0.7s', dur: '6.1s' },
+  { id: 3, color: '#6BB4E8', top: '20%', left: '47%', rot: '-12deg', delay: '1.3s', dur: '5.6s' },
+  { id: 4, color: '#F5C856', top: '52%', left: '3%', rot: '28deg', delay: '0.4s', dur: '6.4s' },
+  { id: 5, color: '#DF4B72', top: '82%', left: '14%', rot: '-24deg', delay: '1.8s', dur: '5.8s' },
+  { id: 6, color: '#F5C856', top: '80%', left: '38%', rot: '15deg', delay: '1.1s', dur: '5.4s' },
+  { id: 7, color: '#6BB4E8', top: '44%', left: '94%', rot: '-20deg', delay: '0.9s', dur: '6.0s' },
+  { id: 8, color: '#DF4B72', top: '76%', left: '91%', rot: '19deg', delay: '2.1s', dur: '5.5s' },
 ];
 
 export const HeroCarousel: React.FC<HeroCarouselProps> = ({
@@ -164,7 +164,14 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
     <section
       ref={heroRef}
       className={`hero-carousel relative isolate w-full overflow-hidden transition-colors duration-700 ${activeSlide.themeClass}`}
-      style={{ backgroundColor: activeSlide.bgColor }}
+      style={
+        {
+          backgroundColor: activeSlide.bgColor,
+          ['--hero-accent' as string]: activeTrimPalette.base,
+          ['--hero-accent-dark' as string]: activeTrimPalette.dark,
+          ['--hero-accent-light' as string]: activeTrimPalette.light,
+        } as React.CSSProperties
+      }
       aria-roledescription="carousel"
       aria-label="Featured Mama's Moon books and stories"
       onKeyDown={handleKeyDown}
@@ -203,11 +210,9 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
         )}
       </div>
 
-      {/* Top Woven-Linen Scalloped Trim (Mama's Moon Palette) */}
-      <HeroScallopTrim position="top" palette={activeTrimPalette} />
-
-      {/* Slides Viewport */}
+      {/* Slides Viewport with seamlessly overlaid scalloped top & bottom trims */}
       <div className="hero-slides-stage relative w-full">
+        <HeroScallopTrim position="top" palette={activeTrimPalette} />
         {HERO_SLIDES.map((slide, index) => {
           const transitionState = getHeroSlideTransitionState(index, activeIndex, previousIndex);
           const isCurrent = transitionState === 'active';
@@ -258,9 +263,9 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                     />
                   </div>
                   <div className="hero-editorial-copy">
-                    <p className="eyebrow">
-                      <BrandName />
-                      {' · Winter Village Edition'}
+                    <p className="hero-winter-eyebrow">
+                      <span className="hero-winter-eyebrow-rule" aria-hidden="true" />
+                      Winter Edition
                     </p>
                     <h1 id={isCurrent ? 'hero-title' : undefined} className="hero-editorial-heading">
                       Follow Miso &amp; Friends Around Winter Village
@@ -268,7 +273,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                     <p className="hero-editorial-subtitle">{slide.subtitle}</p>
                     <div className="hero-editorial-actions">
                       <a
-                        className="button button-ink whitespace-nowrap shrink-0"
+                        className="button button-winter-primary whitespace-nowrap shrink-0"
                         href={slide.primaryCta.href}
                         onClick={(e) => handleCtaClick(e, slide.primaryCta, slideBook)}
                         tabIndex={isCurrent ? 0 : -1}
@@ -279,7 +284,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
                         </svg>
                       </a>
                       <a
-                        className="button button-paper whitespace-nowrap shrink-0"
+                        className="button button-winter-secondary whitespace-nowrap shrink-0"
                         href={slide.secondaryCta.href}
                         onClick={(e) => handleCtaClick(e, slide.secondaryCta, slideBook)}
                         tabIndex={isCurrent ? 0 : -1}
@@ -493,12 +498,10 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({
             </div>
           );
         })}
+        <HeroScallopTrim position="bottom" palette={activeTrimPalette} />
       </div>
 
-      {/* Bottom Woven-Linen Scalloped Trim overhanging the white pagination strip */}
-      <HeroScallopTrim position="bottom" palette={activeTrimPalette} />
-
-      {/* Coco Wyo-inspired White Bottom Pagination Dots Strip (Pause button removed) */}
+      {/* Crisp White Bottom Pagination Controls Strip */}
       <div className="hero-pagination-bar" role="region" aria-label="Hero slide controls">
         <div className="shell flex items-center justify-center gap-3 py-2.5">
           <button
